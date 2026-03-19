@@ -84,7 +84,7 @@ export default function Settings() {
       <section className="mb-8">
         <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-1">프로필</h3>
         {authUser && (
-          <div className="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mt-3">
+          <div className="flex flex-wrap items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mt-3">
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
             <button onClick={() => fileInputRef.current?.click()} className="relative shrink-0 group">
               <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={56} />
@@ -92,7 +92,7 @@ export default function Settings() {
                 <Camera size={18} className="text-white" />
               </div>
             </button>
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 basis-40">
               {editingName ? (
                 <div className="flex items-center gap-2">
                   <input
@@ -100,7 +100,7 @@ export default function Settings() {
                     value={nameInput}
                     onChange={(e) => setNameInput(e.target.value)}
                     autoFocus
-                    className="flex-1 px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                    className="flex-1 min-w-0 px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && nameInput.trim()) {
                         updateAuth(nameInput.trim());
@@ -118,13 +118,13 @@ export default function Settings() {
                         setEditingName(false);
                       }
                     }}
-                    className="p-1 text-teal-400 hover:bg-teal-500/10 rounded transition-colors"
+                    className="shrink-0 p-1 text-teal-400 hover:bg-teal-500/10 rounded transition-colors"
                   >
                     <Check size={16} />
                   </button>
                   <button
                     onClick={() => setEditingName(false)}
-                    className="p-1 text-slate-400 hover:bg-white/10 rounded transition-colors"
+                    className="shrink-0 p-1 text-slate-400 hover:bg-white/10 rounded transition-colors"
                   >
                     <X size={16} />
                   </button>
@@ -144,7 +144,7 @@ export default function Settings() {
             </div>
             <button
               onClick={() => { googleLogout(); logout(); }}
-              className="flex items-center gap-2 px-4 py-2 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
+              className="flex items-center gap-2 px-4 py-2 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors shrink-0 max-sm:w-full max-sm:justify-center"
             >
               <LogOut size={16} /> 로그아웃
             </button>

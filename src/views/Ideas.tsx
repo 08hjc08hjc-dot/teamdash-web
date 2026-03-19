@@ -247,15 +247,15 @@ export default function Ideas() {
                       <div className="flex items-start gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <h3 className="text-sm font-semibold text-white">{idea.title}</h3>
-                            <span className={`px-2 py-0.5 text-[10px] font-medium rounded-md border ${STATUS_COLORS[idea.status]}`}>{STATUS_LABELS[idea.status]}</span>
+                            <h3 className="text-base font-semibold text-white">{idea.title}</h3>
+                            <span className={`px-2 py-0.5 text-xs font-medium rounded-md border ${STATUS_COLORS[idea.status]}`}>{STATUS_LABELS[idea.status]}</span>
                           </div>
-                          {idea.description && <p className="text-xs text-slate-400 mb-2 whitespace-pre-wrap">{idea.description}</p>}
+                          {idea.description && <p className="text-sm text-slate-400 mb-2 whitespace-pre-wrap">{idea.description}</p>}
                           {renderAttachments(idea.attachments)}
                           <div className="flex items-center gap-2 mt-2">
-                            {author && <Avatar name={author.name} color={author.avatarColor} avatarUrl={author.avatarUrl} size={18} />}
-                            <span className="text-[11px] text-slate-500">{author?.name ?? '알 수 없음'}</span>
-                            <span className="text-[11px] text-slate-600">{formatRelativeDate(idea.createdAt)}</span>
+                            {author && <Avatar name={author.name} color={author.avatarColor} avatarUrl={author.avatarUrl} size={22} />}
+                            <span className="text-xs text-slate-500">{author?.name ?? '알 수 없음'}</span>
+                            <span className="text-xs text-slate-600">{formatRelativeDate(idea.createdAt)}</span>
                           </div>
                         </div>
 
@@ -280,7 +280,7 @@ export default function Ideas() {
                           <button
                             key={type}
                             onClick={() => { if (!myMember) return; const newVote = myVote === type ? null : type; setVote(idea.id, myMember.id, newVote); if (newVote) addActivity({ type: 'idea_voted', actorId: myMember.id, targetId: idea.id, targetTitle: idea.title, metadata: { vote: label } }); }}
-                            className={`px-3 py-1 text-xs font-medium rounded-lg border transition-all ${myVote === type ? activeColor : 'bg-white/5 text-slate-500 border-white/10 hover:bg-white/10 hover:text-slate-300'}`}
+                            className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-all ${myVote === type ? activeColor : 'bg-white/5 text-slate-500 border-white/10 hover:bg-white/10 hover:text-slate-300'}`}
                           >
                             {label} {idea.votes[type].length > 0 && <span className="ml-1">{idea.votes[type].length}</span>}
                           </button>
@@ -290,7 +290,7 @@ export default function Ideas() {
                       {/* Comments toggle */}
                       <button
                         onClick={() => setExpandedIdea(isExpanded ? null : idea.id)}
-                        className="flex items-center gap-1.5 mt-3 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                        className="flex items-center gap-1.5 mt-3 text-sm text-slate-500 hover:text-slate-300 transition-colors"
                       >
                         <MessageCircle size={13} />
                         댓글 {idea.comments.length > 0 && `(${idea.comments.length})`}
@@ -312,8 +312,8 @@ export default function Ideas() {
                           {cAuthor && <Avatar name={cAuthor.name} color={cAuthor.avatarColor} avatarUrl={cAuthor.avatarUrl} size={22} />}
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-[11px] font-medium text-white">{cAuthor?.name ?? '알 수 없음'}</span>
-                              <span className="text-[10px] text-slate-600">{formatRelativeDate(c.createdAt)}</span>
+                              <span className="text-xs font-medium text-white">{cAuthor?.name ?? '알 수 없음'}</span>
+                              <span className="text-xs text-slate-600">{formatRelativeDate(c.createdAt)}</span>
                               {canEditComment && !isEditingComment && (
                                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                   {myMember?.id === c.authorId && <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-slate-600 hover:text-teal-400"><Pencil size={10} /></button>}
@@ -334,7 +334,7 @@ export default function Ideas() {
                                 <button onClick={() => setEditingCommentId(null)} className="p-1 text-slate-400"><X size={12} /></button>
                               </div>
                             ) : (
-                              <p className="text-xs text-slate-400 mt-0.5">{c.content}</p>
+                              <p className="text-sm text-slate-400 mt-0.5">{c.content}</p>
                             )}
                           </div>
                         </div>

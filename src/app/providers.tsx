@@ -40,7 +40,7 @@ function AnimatedBackground() {
 
     const colors = themeMode === 'dark'
       ? ['#061a20', '#08232b', '#041518', '#020d11']
-      : ['#e2e8f0', '#cbd5e1', '#d1d5db', '#e5e7eb'];
+      : ['#e5e5e5', '#d4d4d4', '#dcdcdc', '#c8c8c8'];
 
     (async () => {
       const { WaveGradient } = await import('wave-gradient');

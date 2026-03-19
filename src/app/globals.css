@@ -191,3 +191,13 @@ body {
 .animate-glow-active {
   animation: glow-active 2s ease-in-out infinite;
 }
+
+@keyframes bg-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-bg-shift {
+  animation: bg-shift 20s ease infinite;
+}

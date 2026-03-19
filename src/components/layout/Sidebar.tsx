@@ -194,20 +194,19 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
                 </Link>
               );
             })}
+            {/* Theme toggle - below settings */}
+            <div className={`border-t border-td-border-subtle ${collapsed ? 'mx-1 pt-1 mt-1' : 'mx-2 pt-1 mt-1'}`}>
+              <button
+                onClick={toggleTheme}
+                title={collapsed ? (themeMode === 'dark' ? '라이트 모드' : '다크 모드') : undefined}
+                className={`flex items-center rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all w-full ${collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'}`}
+              >
+                {themeMode === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+                {!collapsed && (themeMode === 'dark' ? '라이트 모드' : '다크 모드')}
+              </button>
+            </div>
           </div>
         </nav>
-
-        {/* Theme toggle */}
-        <div className={`border-t border-td-border-subtle shrink-0 ${collapsed ? 'p-2' : 'p-3'}`}>
-          <button
-            onClick={toggleTheme}
-            title={collapsed ? (themeMode === 'dark' ? '라이트 모드' : '다크 모드') : undefined}
-            className={`flex items-center rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all w-full ${collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'}`}
-          >
-            {themeMode === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
-            {!collapsed && (themeMode === 'dark' ? '라이트 모드' : '다크 모드')}
-          </button>
-        </div>
 
         {/* User profile (bottom) */}
         {authUser && (

@@ -126,7 +126,7 @@ export default function Ideas() {
             {att.type === 'link' ? (
               <a href={att.url} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline truncate max-w-[200px]">{att.name}</a>
             ) : (
-              <span className="text-slate-300 truncate max-w-[200px]">{att.name}</span>
+              <a href={att.url} download={att.name} className="text-slate-300 hover:text-teal-400 hover:underline truncate max-w-[200px] cursor-pointer">{att.name}</a>
             )}
             {onRemove && (
               <button onClick={() => onRemove(att.id)} className="text-slate-500 hover:text-red-400 ml-1"><X size={12} /></button>

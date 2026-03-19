@@ -69,7 +69,7 @@ export default function Ideas() {
   const [uploadingName, setUploadingName] = useState('');
   const [uploadPercent, setUploadPercent] = useState(0);
   const [uploadStatus, setUploadStatus] = useState('');
-  const pendingFileRef = useRef<{ file: File; target: 'new' | 'edit' } | null>(null);
+  const pendingTargetRef = useRef<'new' | 'edit'>('new');
 
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
@@ -100,33 +100,29 @@ export default function Ideas() {
     scope: 'https://www.googleapis.com/auth/drive.file',
     onSuccess: (tokenResponse) => {
       setDriveToken(tokenResponse.access_token);
-      if (pendingFileRef.current) {
-        const { file, target } = pendingFileRef.current;
-        pendingFileRef.current = null;
-        doUpload(file, target);
-      }
+      // Drive 연결 후 파일 선택창 열기
+      if (pendingTargetRef.current === 'edit') editFileRef.current?.click();
+      else fileRef.current?.click();
     },
     onError: () => {
-      setUploading(false);
-      setUploadingName('');
       alert('Google Drive 권한 요청에 실패했습니다.');
     },
   });
+
+  const handleFileButtonClick = (target: 'new' | 'edit', fRef: React.RefObject<HTMLInputElement | null>) => {
+    pendingTargetRef.current = target;
+    if (hasDriveToken()) {
+      fRef.current?.click();
+    } else {
+      requestDriveAccess();
+    }
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
-    if (hasDriveToken()) {
-      doUpload(file, target);
-    } else {
-      pendingFileRef.current = { file, target };
-      setUploading(true);
-      setUploadingName(file.name);
-      setUploadPercent(0);
-      setUploadStatus('드라이브 권한 요청 중...');
-      requestDriveAccess();
-    }
+    doUpload(file, target);
   };
 
   const addLink = (url: string, target: 'new' | 'edit') => {
@@ -192,7 +188,7 @@ export default function Ideas() {
   ) => (
     <div className="flex items-center gap-2">
       <input ref={fRef} type="file" className="hidden" onChange={(e) => handleFileUpload(e, target)} />
-      <button type="button" onClick={() => fRef.current?.click()} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors">
+      <button type="button" onClick={() => handleFileButtonClick(target, fRef)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors">
         <Paperclip size={12} /> 파일
       </button>
       <button type="button" onClick={() => setShowLink(!showLink)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors">

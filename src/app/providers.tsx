@@ -99,7 +99,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   }, [myMember?.id]);
 
   return (
-    <div className="bg-td-bg min-h-screen overflow-hidden">
+    <div className="min-h-screen overflow-hidden">
       <AnimatedBackground />
 
       <div className="flex h-screen relative z-10">

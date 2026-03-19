@@ -90,7 +90,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
           {/* Sliding indicator */}
           {activeIdx >= 0 && (
             <div
-              className="absolute left-3 right-3 bg-teal-500/15 rounded-xl pointer-events-none transition-all duration-300 ease-out"
+              className="absolute left-3 right-3 bg-teal-500/25 dark:bg-teal-500/15 rounded-xl pointer-events-none transition-all duration-300 ease-out"
               style={{
                 top: `${12 + activeIdx * (mobileItemH + mobileGap)}px`,
                 height: `${mobileItemH}px`,
@@ -107,7 +107,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
 
                   onClick={onClose}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 ${
-                    isActive ? 'text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
+                    isActive ? 'text-teal-700 dark:text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
                   }`}
                 >
                   <Icon size={18} />
@@ -157,7 +157,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
           {/* Sliding indicator */}
           {activeIdx >= 0 && (
             <div
-              className={`absolute bg-teal-500/15 rounded-xl pointer-events-none transition-all duration-300 ease-out ${collapsed ? 'left-2 right-2' : 'left-3 right-3'}`}
+              className={`absolute bg-teal-500/25 dark:bg-teal-500/15 rounded-xl pointer-events-none transition-all duration-300 ease-out ${collapsed ? 'left-2 right-2' : 'left-3 right-3'}`}
               style={{
                 top: `${(collapsed ? 8 : 12) + activeIdx * (desktopItemH + desktopGap)}px`,
                 height: `${desktopItemH}px`,
@@ -176,7 +176,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
                   className={`flex items-center rounded-xl text-sm font-medium transition-colors duration-200 ${
                     collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'
                   } ${
-                    isActive ? 'text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
+                    isActive ? 'text-teal-700 dark:text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
                   }`}
                 >
                   <Icon size={18} />

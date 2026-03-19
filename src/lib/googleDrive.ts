@@ -2,6 +2,7 @@
 
 let _token: string | null = null;
 let _currentXhr: XMLHttpRequest | null = null;
+let _abortCtrl: AbortController | null = null;
 
 export function setDriveToken(token: string) {
   _token = token;
@@ -12,10 +13,18 @@ export function hasDriveToken(): boolean {
   return _token !== null;
 }
 
+export function clearDriveToken() {
+  _token = null;
+}
+
 export function cancelUpload() {
   if (_currentXhr) {
     _currentXhr.abort();
     _currentXhr = null;
+  }
+  if (_abortCtrl) {
+    _abortCtrl.abort();
+    _abortCtrl = null;
   }
 }
 
@@ -60,11 +69,20 @@ export async function uploadToGoogleDrive(
     xhr.send(form);
   });
 
-  await fetch(`https://www.googleapis.com/drive/v3/files/${id}/permissions`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${_token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ role: 'reader', type: 'anyone' }),
-  });
+  _abortCtrl = new AbortController();
+  try {
+    await fetch(`https://www.googleapis.com/drive/v3/files/${id}/permissions`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${_token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: 'reader', type: 'anyone' }),
+      signal: _abortCtrl.signal,
+    });
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw new Error('cancelled');
+    throw e;
+  } finally {
+    _abortCtrl = null;
+  }
 
   return `https://drive.google.com/uc?export=download&id=${id}`;
 }

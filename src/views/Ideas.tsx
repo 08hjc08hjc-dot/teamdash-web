@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useGoogleLogin } from '@react-oauth/google';
 import { Lightbulb, Plus, X, Check, Trash2, Pencil, MessageCircle, Paperclip, Link2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useIdeaStore, useTeamStore, useActivityStore } from '../store';
 import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
-import { uploadToGoogleDrive, cancelUpload } from '../lib/googleDrive';
+import { setDriveToken, hasDriveToken, uploadToGoogleDrive, cancelUpload } from '../lib/googleDrive';
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -68,20 +69,18 @@ export default function Ideas() {
   const [uploadingName, setUploadingName] = useState('');
   const [uploadPercent, setUploadPercent] = useState(0);
   const [uploadStatus, setUploadStatus] = useState('');
+  const pendingFileRef = useRef<{ file: File; target: 'new' | 'edit' } | null>(null);
 
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    e.target.value = '';
+  const doUpload = async (file: File, target: 'new' | 'edit') => {
     setUploading(true);
     setUploadingName(file.name);
     setUploadPercent(0);
-    setUploadStatus('드라이브 권한 확인 중...');
+    setUploadStatus('업로드 중...');
     try {
-      const url = await uploadToGoogleDrive(file, (p) => { setUploadPercent(p); setUploadStatus('업로드 중...'); });
+      const url = await uploadToGoogleDrive(file, (p) => setUploadPercent(p));
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
@@ -94,6 +93,39 @@ export default function Ideas() {
     } finally {
       setUploading(false);
       setUploadingName('');
+    }
+  };
+
+  const requestDriveAccess = useGoogleLogin({
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    onSuccess: (tokenResponse) => {
+      setDriveToken(tokenResponse.access_token);
+      if (pendingFileRef.current) {
+        const { file, target } = pendingFileRef.current;
+        pendingFileRef.current = null;
+        doUpload(file, target);
+      }
+    },
+    onError: () => {
+      setUploading(false);
+      setUploadingName('');
+      alert('Google Drive 권한 요청에 실패했습니다.');
+    },
+  });
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    if (hasDriveToken()) {
+      doUpload(file, target);
+    } else {
+      pendingFileRef.current = { file, target };
+      setUploading(true);
+      setUploadingName(file.name);
+      setUploadPercent(0);
+      setUploadStatus('드라이브 권한 요청 중...');
+      requestDriveAccess();
     }
   };
 

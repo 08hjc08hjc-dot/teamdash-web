@@ -1,93 +1,29 @@
 'use client';
 
-const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
-const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
-
 let _token: string | null = null;
-let _cancelled = false;
 let _currentXhr: XMLHttpRequest | null = null;
-let _rejectFn: ((err: Error) => void) | null = null;
 
 export function setDriveToken(token: string) {
   _token = token;
   setTimeout(() => { _token = null; }, 55 * 60 * 1000);
 }
 
+export function hasDriveToken(): boolean {
+  return _token !== null;
+}
+
 export function cancelUpload() {
-  _cancelled = true;
   if (_currentXhr) {
     _currentXhr.abort();
     _currentXhr = null;
   }
-  if (_rejectFn) {
-    _rejectFn(new Error('cancelled'));
-    _rejectFn = null;
-  }
-}
-
-function requestDriveToken(): Promise<string> {
-  return new Promise((resolve, reject) => {
-    _rejectFn = reject;
-
-    if (_cancelled) { reject(new Error('cancelled')); return; }
-    if (_token) { _rejectFn = null; resolve(_token); return; }
-
-    const g = (window as unknown as Record<string, unknown>).google as {
-      accounts: {
-        oauth2: {
-          initTokenClient: (config: {
-            client_id: string;
-            scope: string;
-            callback: (r: { access_token?: string; error?: string; error_description?: string }) => void;
-          }) => { requestAccessToken: () => void };
-        };
-      };
-    } | undefined;
-
-    if (!g?.accounts?.oauth2) {
-      reject(new Error('Google SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.'));
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      _rejectFn = null;
-      reject(new Error('드라이브 권한 요청 시간 초과 (30초). 팝업이 차단되었을 수 있습니다. 브라우저에서 팝업을 허용해주세요.'));
-    }, 30000);
-
-    try {
-      const client = g.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: DRIVE_SCOPE,
-        callback: (resp) => {
-          clearTimeout(timeout);
-          _rejectFn = null;
-          if (_cancelled) { reject(new Error('cancelled')); return; }
-          if (resp.error || !resp.access_token) {
-            const msg = resp.error_description || resp.error || '드라이브 권한 요청 실패';
-            reject(new Error(msg));
-            return;
-          }
-          setDriveToken(resp.access_token);
-          resolve(resp.access_token);
-        },
-      });
-
-      client.requestAccessToken();
-    } catch (err) {
-      _rejectFn = null;
-      reject(new Error(`Google 인증 오류: ${(err as Error).message}`));
-    }
-  });
 }
 
 export async function uploadToGoogleDrive(
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<string> {
-  _cancelled = false;
-
-  const token = await requestDriveToken();
-  if (_cancelled) throw new Error('cancelled');
+  if (!_token) throw new Error('드라이브 권한이 필요합니다. 다시 시도해주세요.');
 
   const metadata = new Blob(
     [JSON.stringify({ name: `teamdash_${Date.now()}_${file.name}`, mimeType: file.type })],
@@ -102,7 +38,7 @@ export async function uploadToGoogleDrive(
     const xhr = new XMLHttpRequest();
     _currentXhr = xhr;
     xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
-    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.setRequestHeader('Authorization', `Bearer ${_token}`);
 
     xhr.upload.onprogress = (e) => {
       if (e.lengthComputable && onProgress) {
@@ -124,11 +60,9 @@ export async function uploadToGoogleDrive(
     xhr.send(form);
   });
 
-  if (_cancelled) throw new Error('cancelled');
-
   await fetch(`https://www.googleapis.com/drive/v3/files/${id}/permissions`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${_token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ role: 'reader', type: 'anyone' }),
   });
 

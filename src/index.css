@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Freesentation', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbars on mobile & tablet */
+@media (max-width: 1023px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+  }
+
+  /* Tap damping effect */
+  a, button, [role="button"] {
+    transition: transform 0.05s ease;
+  }
+  a:active, button:active, [role="button"]:active {
+    transform: scale(0.96);
+    transition: transform 0s;
+  }
+}
+
+
+/* Glass utility classes */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Custom scrollbar - glass theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(13, 148, 136, 0.3);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 148, 136, 0.5);
+  background-clip: padding-box;
+}
+
+/* Styled scrollbar for inner sections */
+.scroll-section {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(13, 148, 136, 0.3) rgba(255, 255, 255, 0.03);
+}
+
+.scroll-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-section::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 3px;
+  margin: 4px 0;
+}
+
+.scroll-section::-webkit-scrollbar-thumb {
+  background: rgba(13, 148, 136, 0.25);
+  border-radius: 3px;
+}
+
+.scroll-section::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 148, 136, 0.45);
+}
+
+/* Progress bar entrance animation */
+@keyframes grow-width {
+  from { width: 0%; }
+}
+
+.animate-bar {
+  animation: grow-width 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* Animated indicators */
+@keyframes pulse-dot {
+  0%, 100% {
+    filter: brightness(1);
+    box-shadow: 0 0 3px 1px currentColor;
+  }
+  50% {
+    filter: brightness(1.4);
+    box-shadow: 0 0 6px 2px currentColor;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes glow-active {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(34, 197, 94, 0.5); }
+  50% { box-shadow: 0 0 12px 4px rgba(34, 197, 94, 0.9); }
+}
+
+.animate-glow-active {
+  animation: glow-active 2s ease-in-out infinite;
+}

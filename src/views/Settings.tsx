@@ -1,0 +1,255 @@
+'use client';
+
+import { useState, useRef } from 'react';
+import { googleLogout } from '@react-oauth/google';
+import { useAuthStore, useTeamStore, useProjectStore, useTaskStore, useActivityStore, useSettingsStore, useWidgetStore } from '../store';
+import { SEED_MEMBERS, SEED_PROJECTS, SEED_TASKS, SEED_ACTIVITIES } from '../utils/seedData';
+import { Avatar } from '../components/ui/Avatar';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { usePermissions, OWNER_EMAIL } from '../hooks/usePermissions';
+import { ROLE_LABELS } from '../constants';
+import { DatabaseBackup, Trash2, LogOut, Pencil, Check, X, Camera } from 'lucide-react';
+import type { TeamRole } from '../models';
+
+export default function Settings() {
+  const authUser = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const updateAuth = useAuthStore((s) => s.updateName);
+  const setCurrentUserId = useSettingsStore((s) => s.setCurrentUserId);
+  const members = useTeamStore((s) => s.members);
+  const setMembers = useTeamStore((s) => s.setMembers);
+  const updateMember = useTeamStore((s) => s.updateMember);
+  const removeMember = useTeamStore((s) => s.removeMember);
+  const setProjects = useProjectStore((s) => s.setProjects);
+  const setTasks = useTaskStore((s) => s.setTasks);
+  const setActivities = useActivityStore((s) => s.setActivities);
+  const resetWidgets = useWidgetStore((s) => s.resetWidgets);
+
+  const { isOwner, isAdmin, member: myMember } = usePermissions();
+
+  const [clearDialog, setClearDialog] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !myMember) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const s = 128;
+        canvas.width = s;
+        canvas.height = s;
+        const ctx = canvas.getContext('2d')!;
+        const min = Math.min(img.width, img.height);
+        const sx = (img.width - min) / 2;
+        const sy = (img.height - min) / 2;
+        ctx.drawImage(img, sx, sy, min, min, 0, 0, s, s);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        updateMember(myMember.id, { avatarUrl: dataUrl });
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const handleLoadDemo = () => {
+    setMembers(SEED_MEMBERS);
+    setProjects(SEED_PROJECTS);
+    setTasks(SEED_TASKS);
+    setActivities(SEED_ACTIVITIES);
+    setCurrentUserId('member-1');
+    resetWidgets();
+  };
+
+  const handleClearAll = () => {
+    setMembers([]);
+    setProjects([]);
+    setTasks([]);
+    setActivities([]);
+    setCurrentUserId('');
+    resetWidgets();
+    setClearDialog(false);
+  };
+
+  const availableRoles = (targetEmail: string): TeamRole[] => {
+    if (targetEmail === OWNER_EMAIL) return [];
+    if (isOwner) return ['owner', 'admin', 'member'];
+    if (isAdmin) return ['admin', 'member'];
+    return [];
+  };
+
+  return (
+    <div className="max-w-2xl">
+      <h2 className="text-2xl font-bold text-white mb-6">설정</h2>
+
+      {/* Profile */}
+      <section className="mb-8">
+        <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-1">프로필</h3>
+        {authUser && (
+          <div className="flex items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mt-3">
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+            <button onClick={() => fileInputRef.current?.click()} className="relative shrink-0 group">
+              <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={56} />
+              <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera size={18} className="text-white" />
+              </div>
+            </button>
+            <div className="min-w-0 flex-1">
+              {editingName ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    autoFocus
+                    className="flex-1 px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && nameInput.trim()) {
+                        updateAuth(nameInput.trim());
+                        if (myMember) updateMember(myMember.id, { name: nameInput.trim() });
+                        setEditingName(false);
+                      }
+                      if (e.key === 'Escape') setEditingName(false);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      if (nameInput.trim()) {
+                        updateAuth(nameInput.trim());
+                        if (myMember) updateMember(myMember.id, { name: nameInput.trim() });
+                        setEditingName(false);
+                      }
+                    }}
+                    className="p-1 text-teal-400 hover:bg-teal-500/10 rounded transition-colors"
+                  >
+                    <Check size={16} />
+                  </button>
+                  <button
+                    onClick={() => setEditingName(false)}
+                    className="p-1 text-slate-400 hover:bg-white/10 rounded transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold text-white truncate">{authUser.name}</p>
+                  <button
+                    onClick={() => { setNameInput(authUser.name); setEditingName(true); }}
+                    className="p-1 text-slate-400 hover:text-teal-400 hover:bg-white/10 rounded transition-colors"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                </div>
+              )}
+              <p className="text-xs text-slate-400 truncate">{authUser.email}</p>
+            </div>
+            <button
+              onClick={() => { googleLogout(); logout(); }}
+              className="flex items-center gap-2 px-4 py-2 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors shrink-0"
+            >
+              <LogOut size={16} /> 로그아웃
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Team Management - owner/admin only */}
+      {(isOwner || isAdmin) && (
+        <section className="mb-8">
+          <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">팀 관리</h3>
+
+          {/* Member list */}
+          <div className="space-y-2">
+            {members.map((m) => {
+              const isMemberOwner = m.email === OWNER_EMAIL;
+              const roles = availableRoles(m.email);
+              return (
+                <div key={m.id} className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl">
+                  <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={32} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-white truncate">{m.name}</p>
+                    <p className="text-xs text-slate-400 truncate">{m.email}</p>
+                  </div>
+                  {isMemberOwner ? (
+                    <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/15 text-teal-400 font-medium">소유자</span>
+                  ) : (
+                    <select
+                      value={m.role}
+                      onChange={(e) => updateMember(m.id, { role: e.target.value as TeamRole })}
+                      className="bg-[#1e293b] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                      disabled={roles.length === 0}
+                    >
+                      {roles.map((r) => (
+                        <option key={r} value={r} className="bg-[#1e293b] text-white">{ROLE_LABELS[r]}</option>
+                      ))}
+                    </select>
+                  )}
+                  {!isMemberOwner && (
+                    <button
+                      onClick={() => removeMember(m.id)}
+                      className="p-1.5 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+            {members.length === 0 && (
+              <p className="text-sm text-slate-400 py-4">팀원이 없습니다. 데모 데이터를 불러오거나 직접 추가하세요.</p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Data */}
+      <section className="mb-8">
+        <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">데이터</h3>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={handleLoadDemo}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-white/10 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 bg-white/5 backdrop-blur-xl transition-colors"
+          >
+            <DatabaseBackup size={16} /> 데모 데이터 불러오기
+          </button>
+          <button
+            onClick={() => setClearDialog(true)}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 bg-white/5 backdrop-blur-xl transition-colors"
+          >
+            <Trash2 size={16} /> 모든 데이터 삭제
+          </button>
+        </div>
+      </section>
+
+      {/* About */}
+      <section>
+        <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">정보</h3>
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4">
+          <div className="flex justify-between py-1">
+            <span className="text-sm text-slate-300">버전</span>
+            <span className="text-sm text-white font-medium">1.0.0</span>
+          </div>
+          <div className="flex justify-between py-1">
+            <span className="text-sm text-slate-300">기술 스택</span>
+            <span className="text-sm text-white font-medium">React + Vite + Tailwind</span>
+          </div>
+        </div>
+      </section>
+
+      <ConfirmDialog
+        open={clearDialog}
+        title="데이터 삭제"
+        message="모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+        confirmLabel="삭제"
+        onConfirm={handleClearAll}
+        onCancel={() => setClearDialog(false)}
+      />
+    </div>
+  );
+}

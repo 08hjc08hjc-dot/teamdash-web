@@ -357,6 +357,19 @@ export default function Ideas() {
                           }
                         }}
                       />
+                      <button
+                        onClick={() => {
+                          if (commentInput.trim() && myMember) {
+                            addComment(idea.id, myMember.id, commentInput.trim());
+                            addActivity({ type: 'idea_comment', actorId: myMember.id, targetId: idea.id, targetTitle: idea.title });
+                            setCommentInput('');
+                          }
+                        }}
+                        disabled={!commentInput.trim()}
+                        className="shrink-0 px-3 py-1.5 bg-teal-500 hover:bg-teal-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg text-xs font-medium text-white transition-colors"
+                      >
+                        작성
+                      </button>
                     </div>
                   </div>
                 )}

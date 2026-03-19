@@ -4,19 +4,26 @@ const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
 
 let _token: string | null = null;
+let _cancelled = false;
+let _currentXhr: XMLHttpRequest | null = null;
 
 export function setDriveToken(token: string) {
   _token = token;
   setTimeout(() => { _token = null; }, 55 * 60 * 1000);
 }
 
-export function hasDriveToken(): boolean {
-  return _token !== null;
+export function cancelUpload() {
+  _cancelled = true;
+  if (_currentXhr) {
+    _currentXhr.abort();
+    _currentXhr = null;
+  }
 }
 
 function requestDriveToken(): Promise<string> {
   return new Promise((resolve, reject) => {
     if (_token) { resolve(_token); return; }
+    if (_cancelled) { reject(new Error('cancelled')); return; }
 
     const g = (window as unknown as Record<string, unknown>).google as {
       accounts: {
@@ -36,6 +43,7 @@ function requestDriveToken(): Promise<string> {
       client_id: CLIENT_ID,
       scope: DRIVE_SCOPE,
       callback: (resp) => {
+        if (_cancelled) { reject(new Error('cancelled')); return; }
         if (resp.error || !resp.access_token) {
           reject(new Error(resp.error ?? '드라이브 권한 요청 실패'));
           return;
@@ -49,25 +57,14 @@ function requestDriveToken(): Promise<string> {
   });
 }
 
-async function getToken(): Promise<string> {
-  if (_token) return _token;
-  return requestDriveToken();
-}
-
-let _currentXhr: XMLHttpRequest | null = null;
-
-export function cancelUpload() {
-  if (_currentXhr) {
-    _currentXhr.abort();
-    _currentXhr = null;
-  }
-}
-
 export async function uploadToGoogleDrive(
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<string> {
-  const token = await getToken();
+  _cancelled = false;
+
+  const token = await requestDriveToken();
+  if (_cancelled) throw new Error('cancelled');
 
   const metadata = new Blob(
     [JSON.stringify({ name: `teamdash_${Date.now()}_${file.name}`, mimeType: file.type })],
@@ -103,6 +100,8 @@ export async function uploadToGoogleDrive(
     xhr.onabort = () => { _currentXhr = null; reject(new Error('cancelled')); };
     xhr.send(form);
   });
+
+  if (_cancelled) throw new Error('cancelled');
 
   await fetch(`https://www.googleapis.com/drive/v3/files/${id}/permissions`, {
     method: 'POST',

@@ -84,8 +84,9 @@ export default function Ideas() {
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
     } catch (err) {
-      if ((err as Error).message !== 'cancelled') {
-        alert('파일 업로드에 실패했습니다.');
+      const msg = (err as Error).message;
+      if (msg !== 'cancelled') {
+        alert(`파일 업로드 실패: ${msg}`);
       }
       console.error('[Upload]', err);
     } finally {

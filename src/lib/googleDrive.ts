@@ -6,6 +6,7 @@ const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
 let _token: string | null = null;
 let _cancelled = false;
 let _currentXhr: XMLHttpRequest | null = null;
+let _rejectFn: ((err: Error) => void) | null = null;
 
 export function setDriveToken(token: string) {
   _token = token;
@@ -18,12 +19,18 @@ export function cancelUpload() {
     _currentXhr.abort();
     _currentXhr = null;
   }
+  if (_rejectFn) {
+    _rejectFn(new Error('cancelled'));
+    _rejectFn = null;
+  }
 }
 
 function requestDriveToken(): Promise<string> {
   return new Promise((resolve, reject) => {
-    if (_token) { resolve(_token); return; }
+    _rejectFn = reject;
+
     if (_cancelled) { reject(new Error('cancelled')); return; }
+    if (_token) { _rejectFn = null; resolve(_token); return; }
 
     const g = (window as unknown as Record<string, unknown>).google as {
       accounts: {
@@ -31,29 +38,39 @@ function requestDriveToken(): Promise<string> {
           initTokenClient: (config: {
             client_id: string;
             scope: string;
-            callback: (r: { access_token?: string; error?: string }) => void;
+            callback: (r: { access_token?: string; error?: string; error_description?: string }) => void;
           }) => { requestAccessToken: () => void };
         };
       };
     } | undefined;
 
-    if (!g) { reject(new Error('Google SDK 로드 안됨')); return; }
+    if (!g?.accounts?.oauth2) {
+      reject(new Error('Google SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.'));
+      return;
+    }
 
-    const client = g.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: DRIVE_SCOPE,
-      callback: (resp) => {
-        if (_cancelled) { reject(new Error('cancelled')); return; }
-        if (resp.error || !resp.access_token) {
-          reject(new Error(resp.error ?? '드라이브 권한 요청 실패'));
-          return;
-        }
-        setDriveToken(resp.access_token);
-        resolve(resp.access_token);
-      },
-    });
+    try {
+      const client = g.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: DRIVE_SCOPE,
+        callback: (resp) => {
+          _rejectFn = null;
+          if (_cancelled) { reject(new Error('cancelled')); return; }
+          if (resp.error || !resp.access_token) {
+            const msg = resp.error_description || resp.error || '드라이브 권한 요청 실패';
+            reject(new Error(msg));
+            return;
+          }
+          setDriveToken(resp.access_token);
+          resolve(resp.access_token);
+        },
+      });
 
-    client.requestAccessToken();
+      client.requestAccessToken();
+    } catch (err) {
+      _rejectFn = null;
+      reject(new Error(`Google 인증 오류: ${(err as Error).message}`));
+    }
   });
 }
 

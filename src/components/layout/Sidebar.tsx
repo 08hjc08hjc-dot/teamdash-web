@@ -122,7 +122,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
         </nav>
 
         <div className="p-3 border-t border-td-border-subtle shrink-0 space-y-1">
-          <button onClick={toggleTheme} className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all">
+          <button onClick={toggleTheme} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all">
             <div className="relative w-8 h-[18px] rounded-full bg-td-border border border-td-border-strong transition-colors shrink-0">
               <div className={`absolute top-[2px] w-3.5 h-3.5 rounded-full shadow flex items-center justify-center transition-all duration-200 ${themeMode === 'dark' ? 'left-[0.875rem] bg-slate-700' : 'left-[2px] bg-white'}`}>
                 {themeMode === 'dark' ? <Moon size={8} className="text-blue-300" /> : <Sun size={8} className="text-amber-500" />}
@@ -200,7 +200,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
               <button
                 onClick={toggleTheme}
                 title={collapsed ? (themeMode === 'dark' ? '라이트 모드' : '다크 모드') : undefined}
-                className={`flex items-center rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all w-full ${collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'}`}
+                className={`flex items-center rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all w-full ${collapsed ? 'justify-center p-3' : 'gap-3 px-3 py-2.5'}`}
               >
                 <div className="relative w-10 h-[22px] rounded-full bg-td-border border border-td-border-strong transition-colors shrink-0">
                   <div className={`absolute top-[2px] w-4 h-4 rounded-full shadow flex items-center justify-center transition-all duration-200 ${themeMode === 'dark' ? 'left-[1.25rem] bg-slate-700' : 'left-[2px] bg-white'}`}>

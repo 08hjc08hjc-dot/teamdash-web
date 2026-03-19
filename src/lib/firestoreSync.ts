@@ -5,10 +5,26 @@ import { useTeamStore, useProjectStore, useTaskStore, useActivityStore, useIdeaS
 let _syncing = false;
 const _loaded = new Set<string>();
 
+function stripBase64(data: unknown): unknown {
+  if (!Array.isArray(data)) return data;
+  return data.map((item: Record<string, unknown>) => {
+    if (!item?.attachments || !Array.isArray(item.attachments)) return item;
+    return {
+      ...item,
+      attachments: (item.attachments as Record<string, unknown>[]).map((att) =>
+        typeof att.url === 'string' && att.url.startsWith('data:')
+          ? { ...att, url: '' }
+          : att
+      ),
+    };
+  });
+}
+
 async function push(key: string, data: unknown) {
   if (_syncing || !_loaded.has(key)) return;
+  const payload = key === 'ideas' ? stripBase64(data) : data;
   try {
-    await setDoc(doc(db, 'teamdash', key), { json: JSON.stringify(data), ts: Date.now() });
+    await setDoc(doc(db, 'teamdash', key), { json: JSON.stringify(payload), ts: Date.now() });
   } catch (e) {
     console.error(`[Firestore] push error (${key}):`, e);
   }

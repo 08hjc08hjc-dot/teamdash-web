@@ -64,6 +64,8 @@ export default function Ideas() {
   const [commentInput, setCommentInput] = useState('');
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editCommentContent, setEditCommentContent] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadingName, setUploadingName] = useState('');
 
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
@@ -72,6 +74,8 @@ export default function Ideas() {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
+    setUploading(true);
+    setUploadingName(file.name);
     try {
       const url = await uploadToGoogleDrive(file);
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
@@ -80,6 +84,9 @@ export default function Ideas() {
     } catch (err) {
       alert('파일 업로드에 실패했습니다.');
       console.error('[Upload]', err);
+    } finally {
+      setUploading(false);
+      setUploadingName('');
     }
   };
 
@@ -379,6 +386,16 @@ export default function Ideas() {
               </div>
             );
           })}
+        </div>
+      )}
+      {/* Upload progress overlay */}
+      {uploading && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-[#1a1825] border border-white/10 rounded-2xl p-6 text-center max-w-xs w-full mx-4 shadow-2xl">
+            <div className="w-10 h-10 border-3 border-teal-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-white font-medium mb-1">파일 업로드 중...</p>
+            <p className="text-sm text-slate-400 truncate">{uploadingName}</p>
+          </div>
         </div>
       )}
     </div>

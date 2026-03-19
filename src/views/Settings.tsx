@@ -6,6 +6,7 @@ import { useAuthStore, useTeamStore, useProjectStore, useTaskStore, useActivityS
 import { SEED_MEMBERS, SEED_PROJECTS, SEED_TASKS, SEED_ACTIVITIES } from '../utils/seedData';
 import { Avatar } from '../components/ui/Avatar';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { PhotoCropDialog } from '../components/ui/PhotoCropDialog';
 import { usePermissions, OWNER_EMAIL } from '../hooks/usePermissions';
 import { ROLE_LABELS } from '../constants';
 import { DatabaseBackup, Trash2, LogOut, Pencil, Check, X, Camera } from 'lucide-react';
@@ -30,6 +31,7 @@ export default function Settings() {
   const [clearDialog, setClearDialog] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,24 +39,15 @@ export default function Settings() {
     if (!file || !myMember) return;
     const reader = new FileReader();
     reader.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const s = 128;
-        canvas.width = s;
-        canvas.height = s;
-        const ctx = canvas.getContext('2d')!;
-        const min = Math.min(img.width, img.height);
-        const sx = (img.width - min) / 2;
-        const sy = (img.height - min) / 2;
-        ctx.drawImage(img, sx, sy, min, min, 0, 0, s, s);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        updateMember(myMember.id, { avatarUrl: dataUrl });
-      };
-      img.src = reader.result as string;
+      setCropSrc(reader.result as string);
     };
     reader.readAsDataURL(file);
     e.target.value = '';
+  };
+
+  const handleCropConfirm = (croppedDataUrl: string) => {
+    if (myMember) updateMember(myMember.id, { avatarUrl: croppedDataUrl });
+    setCropSrc(null);
   };
 
   const handleLoadDemo = () => {
@@ -237,7 +230,7 @@ export default function Settings() {
           </div>
           <div className="flex justify-between py-1">
             <span className="text-sm text-slate-300">기술 스택</span>
-            <span className="text-sm text-white font-medium">React + Vite + Tailwind</span>
+            <span className="text-sm text-white font-medium">Next.js + Tailwind</span>
           </div>
         </div>
       </section>
@@ -249,6 +242,13 @@ export default function Settings() {
         confirmLabel="삭제"
         onConfirm={handleClearAll}
         onCancel={() => setClearDialog(false)}
+      />
+
+      <PhotoCropDialog
+        open={!!cropSrc}
+        imageSrc={cropSrc ?? ''}
+        onConfirm={handleCropConfirm}
+        onCancel={() => setCropSrc(null)}
       />
     </div>
   );

@@ -32,20 +32,23 @@ function AnimatedBackground() {
   const themeMode = useSettingsStore((s) => s.themeMode);
 
   useEffect(() => {
-    if (themeMode === 'light') return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     let gradient: any;
     let cancelled = false;
 
+    const colors = themeMode === 'dark'
+      ? ['#061a20', '#08232b', '#041518', '#020d11']
+      : ['#e2e8f0', '#cbd5e1', '#d1d5db', '#e5e7eb'];
+
     (async () => {
       const { WaveGradient } = await import('wave-gradient');
       if (cancelled) return;
       gradient = new WaveGradient(canvas, {
-        colors: ['#0a0a0a', '#171717', '#111111', '#1c1c1c'],
-        speed: 1.0,
-        amplitude: 320,
+        colors,
+        speed: themeMode === 'dark' ? 1.0 : 0.6,
+        amplitude: themeMode === 'dark' ? 320 : 200,
         fps: 30,
         seed: 5,
       });
@@ -56,14 +59,6 @@ function AnimatedBackground() {
       if (gradient && typeof gradient.pause === 'function') gradient.pause();
     };
   }, [themeMode]);
-
-  if (themeMode === 'light') {
-    return (
-      <div className="fixed inset-0 pointer-events-none z-0 animate-bg-shift"
-        style={{ background: 'linear-gradient(-45deg, #e2e8f0, #cbd5e1, #e2e8f0, #d1d5db, #e5e7eb, #e2e8f0)', backgroundSize: '300% 300%' }}
-      />
-    );
-  }
 
   return (
     <canvas
@@ -80,10 +75,10 @@ function ThemeToggle() {
   return (
     <button
       onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-      className="relative w-10 h-[22px] rounded-full bg-td-border hover:bg-td-hover-strong border border-td-border-strong transition-colors"
+      className="relative w-8 h-[18px] rounded-full bg-td-border hover:bg-td-hover-strong border border-td-border-strong transition-colors"
     >
-      <div className={`absolute top-[2px] w-4 h-4 rounded-full shadow flex items-center justify-center transition-all duration-200 ${themeMode === 'dark' ? 'left-[1.25rem] bg-slate-700' : 'left-[2px] bg-white'}`}>
-        {themeMode === 'dark' ? <Moon size={10} className="text-blue-300" /> : <Sun size={10} className="text-amber-500" />}
+      <div className={`absolute top-[2px] w-3.5 h-3.5 rounded-full shadow flex items-center justify-center transition-all duration-200 ${themeMode === 'dark' ? 'left-[0.875rem] bg-slate-700' : 'left-[2px] bg-white'}`}>
+        {themeMode === 'dark' ? <Moon size={8} className="text-blue-300" /> : <Sun size={8} className="text-amber-500" />}
       </div>
     </button>
   );

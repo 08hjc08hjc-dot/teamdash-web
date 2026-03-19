@@ -9,6 +9,7 @@ import { useAuthStore, useTeamStore, useProjectStore, useTaskStore, useActivityS
 import { SEED_MEMBERS, SEED_PROJECTS, SEED_TASKS, SEED_ACTIVITIES } from '../utils/seedData';
 import { Avatar } from '../components/ui/Avatar';
 import Login from '../views/Login';
+import { initFirestoreSync } from '../lib/firestoreSync';
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
 
@@ -116,6 +117,11 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   ensureSeedData();
+
+  useEffect(() => {
+    const cleanup = initFirestoreSync();
+    return cleanup;
+  }, []);
 
   const user = useAuthStore((s) => s.user);
 

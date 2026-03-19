@@ -7,6 +7,7 @@ import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
+import { uploadFile } from '../lib/firebaseStorage';
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -67,17 +68,25 @@ export default function Ideas() {
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url: reader.result as string };
+    e.target.value = '';
+    try {
+      const url = await uploadFile(file);
+      const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    } catch {
+      // Fallback to base64 if Storage upload fails
+      const reader = new FileReader();
+      reader.onload = () => {
+        const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url: reader.result as string };
+        if (target === 'new') setAttachments((p) => [...p, att]);
+        else setEditAttachments((p) => [...p, att]);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const addLink = (url: string, target: 'new' | 'edit') => {

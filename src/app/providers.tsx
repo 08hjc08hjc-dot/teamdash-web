@@ -43,7 +43,7 @@ function AnimatedBackground() {
       const { WaveGradient } = await import('wave-gradient');
       if (cancelled) return;
       gradient = new WaveGradient(canvas, {
-        colors: ['#061a20', '#08232b', '#041518', '#020d11'],
+        colors: ['#0a0a0a', '#171717', '#111111', '#1c1c1c'],
         speed: 1.0,
         amplitude: 320,
         fps: 30,
@@ -80,13 +80,11 @@ function ThemeToggle() {
   return (
     <button
       onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-      className="flex items-center gap-1.5 p-1.5 rounded-xl bg-td-card border border-td-border hover:bg-td-hover-strong transition-colors"
+      className="relative w-10 h-[22px] rounded-full bg-td-border hover:bg-td-hover-strong border border-td-border-strong transition-colors"
     >
-      <Sun size={13} className={themeMode === 'light' ? 'text-amber-400' : 'text-td-text-faint'} />
-      <div className="relative w-7 h-4 rounded-full bg-td-border transition-colors">
-        <div className={`absolute top-0.5 w-3 h-3 rounded-full shadow transition-all duration-200 ${themeMode === 'dark' ? 'left-[0.875rem] bg-slate-700' : 'left-0.5 bg-white'}`} />
+      <div className={`absolute top-[2px] w-4 h-4 rounded-full shadow flex items-center justify-center transition-all duration-200 ${themeMode === 'dark' ? 'left-[1.25rem] bg-slate-700' : 'left-[2px] bg-white'}`}>
+        {themeMode === 'dark' ? <Moon size={10} className="text-blue-300" /> : <Sun size={10} className="text-amber-500" />}
       </div>
-      <Moon size={13} className={themeMode === 'dark' ? 'text-blue-300' : 'text-td-text-faint'} />
     </button>
   );
 }

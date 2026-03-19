@@ -11,11 +11,28 @@ module.exports = {
         sans: ['Freesentation', 'sans-serif'],
       },
       colors: {
-        glass: {
-          surface: 'rgba(255,255,255,0.06)',
-          'surface-strong': 'rgba(255,255,255,0.1)',
-          border: 'rgba(255,255,255,0.1)',
-          'border-strong': 'rgba(255,255,255,0.15)',
+        td: {
+          bg: 'var(--td-bg)',
+          'bg-soft': 'var(--td-bg-soft)',
+          card: 'var(--td-card)',
+          'card-hover': 'var(--td-card-hover)',
+          surface: 'var(--td-surface)',
+          'surface-alt': 'var(--td-surface-alt)',
+          input: 'var(--td-input)',
+          'input-border': 'var(--td-input-border)',
+          text: 'var(--td-text)',
+          'text-bright': 'var(--td-text-bright)',
+          'text-secondary': 'var(--td-text-secondary)',
+          'text-muted': 'var(--td-text-muted)',
+          'text-faint': 'var(--td-text-faint)',
+          border: 'var(--td-border)',
+          'border-subtle': 'var(--td-border-subtle)',
+          'border-strong': 'var(--td-border-strong)',
+          hover: 'var(--td-hover)',
+          'hover-strong': 'var(--td-hover-strong)',
+          sidebar: 'var(--td-sidebar)',
+          overlay: 'var(--td-overlay)',
+          select: 'var(--td-select)',
         },
         accent: {
           purple: '#0d9488',
@@ -24,11 +41,9 @@ module.exports = {
           rose: '#f43f5e',
           orange: '#f97316',
         },
-        dark: {
-          bg: '#0f0d1a',
-          card: '#1a1333',
-          surface: '#1e1a2e',
-        },
+      },
+      boxShadow: {
+        td: 'var(--td-shadow)',
       },
       backdropBlur: {
         xs: '2px',

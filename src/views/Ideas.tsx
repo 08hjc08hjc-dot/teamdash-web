@@ -166,11 +166,11 @@ export default function Ideas() {
     atts.length > 0 && (
       <div className="flex flex-wrap gap-2 mt-2">
         {atts.map((att) => (
-          <div key={att.id} className="flex items-center gap-1.5 px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg text-xs">
-            {att.type === 'link' ? <Link2 size={12} className="text-teal-400 shrink-0" /> : <Paperclip size={12} className="text-slate-400 shrink-0" />}
-            <a href={att.url} target="_blank" rel="noopener noreferrer" className={`hover:underline truncate max-w-[200px] cursor-pointer ${att.type === 'link' ? 'text-teal-400' : 'text-slate-300 hover:text-teal-400'}`}>{att.name}</a>
+          <div key={att.id} className="flex items-center gap-1.5 px-2.5 py-1 bg-td-card border border-td-border rounded-lg text-xs">
+            {att.type === 'link' ? <Link2 size={12} className="text-teal-400 shrink-0" /> : <Paperclip size={12} className="text-td-text-muted shrink-0" />}
+            <a href={att.url} target="_blank" rel="noopener noreferrer" className={`hover:underline truncate max-w-[200px] cursor-pointer ${att.type === 'link' ? 'text-teal-400' : 'text-td-text-secondary hover:text-teal-400'}`}>{att.name}</a>
             {onRemove && (
-              <button onClick={() => onRemove(att.id)} className="text-slate-500 hover:text-red-400 ml-1"><X size={12} /></button>
+              <button onClick={() => onRemove(att.id)} className="text-td-text-faint hover:text-red-400 ml-1"><X size={12} /></button>
             )}
           </div>
         ))}
@@ -188,10 +188,10 @@ export default function Ideas() {
   ) => (
     <div className="flex items-center gap-2">
       <input ref={fRef} type="file" className="hidden" onChange={(e) => handleFileUpload(e, target)} />
-      <button type="button" onClick={() => handleFileButtonClick(target, fRef)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors">
+      <button type="button" onClick={() => handleFileButtonClick(target, fRef)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-td-card border border-td-border rounded-lg text-xs text-td-text-muted hover:text-td-text-bright hover:bg-td-hover transition-colors">
         <Paperclip size={12} /> 파일
       </button>
-      <button type="button" onClick={() => setShowLink(!showLink)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors">
+      <button type="button" onClick={() => setShowLink(!showLink)} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-td-card border border-td-border rounded-lg text-xs text-td-text-muted hover:text-td-text-bright hover:bg-td-hover transition-colors">
         <Link2 size={12} /> 링크
       </button>
       {showLink && (
@@ -201,7 +201,7 @@ export default function Ideas() {
             value={linkVal}
             onChange={(e) => setLinkVal(e.target.value)}
             placeholder="https://..."
-            className="flex-1 min-w-0 px-2.5 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+            className="flex-1 min-w-0 px-2.5 py-1.5 bg-td-input border border-td-input-border rounded-lg text-xs text-td-text placeholder-td-text-faint focus:outline-none focus:ring-1 focus:ring-teal-500/50"
             onKeyDown={(e) => { if (e.key === 'Enter') addLink(linkVal, target); }}
           />
           <button onClick={() => addLink(linkVal, target)} className="px-2 py-1.5 bg-teal-500 rounded-lg text-xs text-white hover:bg-teal-600 transition-colors">추가</button>
@@ -213,7 +213,7 @@ export default function Ideas() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white">아이디어 건의</h2>
+        <h2 className="text-2xl font-bold text-td-text">아이디어 건의</h2>
         <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 rounded-xl text-sm font-medium text-white transition-colors">
           {showForm ? <X size={16} /> : <Plus size={16} />}
           {showForm ? '취소' : '건의하기'}
@@ -222,13 +222,13 @@ export default function Ideas() {
 
       {/* New idea form */}
       {showForm && (
-        <div className="mb-6 p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl space-y-3">
+        <div className="mb-6 p-4 bg-td-card backdrop-blur-xl border border-td-border rounded-2xl space-y-3">
           <input type="text" placeholder="아이디어 제목" value={title} onChange={(e) => setTitle(e.target.value)} autoFocus
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+            className="w-full px-3 py-2 bg-td-input border border-td-input-border rounded-xl text-sm text-td-text placeholder-td-text-faint focus:outline-none focus:ring-1 focus:ring-teal-500/50"
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) handleSubmit(); }}
           />
           <textarea placeholder="상세 설명 (선택)" value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
-            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none"
+            className="w-full px-3 py-2 bg-td-input border border-td-input-border rounded-xl text-sm text-td-text placeholder-td-text-faint focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none"
           />
           {renderAttachmentControls('new', fileRef, showLinkInput, setShowLinkInput, linkInput, setLinkInput)}
           {renderAttachments(attachments, (id) => setAttachments((p) => p.filter((a) => a.id !== id)))}
@@ -243,7 +243,7 @@ export default function Ideas() {
       <div className="flex gap-2 flex-wrap mb-4">
         {FILTER_OPTIONS.map((opt) => (
           <button key={opt.value} onClick={() => setFilter(opt.value)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${filter === opt.value ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'}`}>
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${filter === opt.value ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'}`}>
             {opt.label}
           </button>
         ))}
@@ -252,8 +252,8 @@ export default function Ideas() {
       {/* Ideas list */}
       {filtered.length === 0 ? (
         <div className="text-center py-16">
-          <Lightbulb size={40} className="mx-auto text-slate-600 mb-3" />
-          <p className="text-sm text-slate-400">{filter === 'all' ? '아직 건의된 아이디어가 없습니다' : '해당 상태의 아이디어가 없습니다'}</p>
+          <Lightbulb size={40} className="mx-auto text-td-text-faint mb-3" />
+          <p className="text-sm text-td-text-muted">{filter === 'all' ? '아직 건의된 아이디어가 없습니다' : '해당 상태의 아이디어가 없습니다'}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -266,20 +266,20 @@ export default function Ideas() {
             const isExpanded = expandedIdea === idea.id;
 
             return (
-              <div key={idea.id} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+              <div key={idea.id} className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl overflow-hidden">
                 <div className="p-4">
                   {isEditing ? (
                     /* Edit mode */
                     <div className="space-y-3">
                       <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)}
-                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50" />
+                        className="w-full px-3 py-2 bg-td-input border border-td-input-border rounded-xl text-sm text-td-text focus:outline-none focus:ring-1 focus:ring-teal-500/50" />
                       <textarea value={editDesc} onChange={(e) => setEditDesc(e.target.value)} rows={3}
-                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none" />
+                        className="w-full px-3 py-2 bg-td-input border border-td-input-border rounded-xl text-sm text-td-text focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none" />
                       {renderAttachmentControls('edit', editFileRef, showEditLinkInput, setShowEditLinkInput, editLinkInput, setEditLinkInput)}
                       {renderAttachments(editAttachments, (id) => setEditAttachments((p) => p.filter((a) => a.id !== id)))}
                       <div className="flex gap-2">
                         <button onClick={saveEditIdea} className="flex-1 py-2 bg-teal-500 hover:bg-teal-600 rounded-xl text-sm font-medium text-white transition-colors">저장</button>
-                        <button onClick={() => setEditingIdeaId(null)} className="flex-1 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 transition-colors">취소</button>
+                        <button onClick={() => setEditingIdeaId(null)} className="flex-1 py-2 bg-td-card border border-td-border rounded-xl text-sm font-medium text-td-text-secondary hover:bg-td-hover transition-colors">취소</button>
                       </div>
                     </div>
                   ) : (
@@ -288,28 +288,28 @@ export default function Ideas() {
                       <div className="flex items-start gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <h3 className="text-base font-semibold text-white">{idea.title}</h3>
+                            <h3 className="text-base font-semibold text-td-text">{idea.title}</h3>
                             <span className={`px-2 py-0.5 text-xs font-medium rounded-md border ${STATUS_COLORS[idea.status]}`}>{STATUS_LABELS[idea.status]}</span>
                           </div>
-                          {idea.description && <p className="text-sm text-slate-400 mb-2 whitespace-pre-wrap">{idea.description}</p>}
+                          {idea.description && <p className="text-sm text-td-text-muted mb-2 whitespace-pre-wrap">{idea.description}</p>}
                           {renderAttachments(idea.attachments)}
                           <div className="flex items-center gap-2 mt-2">
                             {author && <Avatar name={author.name} color={author.avatarColor} avatarUrl={author.avatarUrl} size={22} />}
-                            <span className="text-xs text-slate-500">{author?.name ?? '알 수 없음'}</span>
-                            <span className="text-xs text-slate-600">{formatRelativeDate(idea.createdAt)}</span>
+                            <span className="text-xs text-td-text-faint">{author?.name ?? '알 수 없음'}</span>
+                            <span className="text-xs text-td-text-faint">{formatRelativeDate(idea.createdAt)}</span>
                           </div>
                         </div>
 
                         {/* Actions */}
                         {canEdit && (
                           <div className="flex items-center gap-1 shrink-0">
-                            {isAuthor && <button onClick={() => startEditIdea(idea.id)} title="수정" className="p-1.5 text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Pencil size={14} /></button>}
-                            <button onClick={() => removeIdea(idea.id)} title="삭제" className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
+                            {isAuthor && <button onClick={() => startEditIdea(idea.id)} title="수정" className="p-1.5 text-td-text-faint hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Pencil size={14} /></button>}
+                            <button onClick={() => removeIdea(idea.id)} title="삭제" className="p-1.5 text-td-text-faint hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
                             {canManage && idea.status !== 'accepted' && (
-                              <button onClick={() => updateStatus(idea.id, 'accepted')} title="채택" className="p-1.5 text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Check size={14} /></button>
+                              <button onClick={() => updateStatus(idea.id, 'accepted')} title="채택" className="p-1.5 text-td-text-faint hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Check size={14} /></button>
                             )}
                             {canManage && idea.status !== 'rejected' && (
-                              <button onClick={() => updateStatus(idea.id, 'rejected')} title="보류" className="p-1.5 text-slate-500 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition-colors"><X size={14} /></button>
+                              <button onClick={() => updateStatus(idea.id, 'rejected')} title="보류" className="p-1.5 text-td-text-faint hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition-colors"><X size={14} /></button>
                             )}
                           </div>
                         )}
@@ -321,7 +321,7 @@ export default function Ideas() {
                           <button
                             key={type}
                             onClick={() => { if (!myMember) return; const newVote = myVote === type ? null : type; setVote(idea.id, myMember.id, newVote); if (newVote) addActivity({ type: 'idea_voted', actorId: myMember.id, targetId: idea.id, targetTitle: idea.title, metadata: { vote: label } }); }}
-                            className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-all ${myVote === type ? activeColor : 'bg-white/5 text-slate-500 border-white/10 hover:bg-white/10 hover:text-slate-300'}`}
+                            className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-all ${myVote === type ? activeColor : 'bg-td-card text-td-text-faint border-td-border hover:bg-td-hover hover:text-td-text-secondary'}`}
                           >
                             {label} {idea.votes[type].length > 0 && <span className="ml-1">{idea.votes[type].length}</span>}
                           </button>
@@ -331,7 +331,7 @@ export default function Ideas() {
                       {/* Comments toggle */}
                       <button
                         onClick={() => setExpandedIdea(isExpanded ? null : idea.id)}
-                        className="flex items-center gap-1.5 mt-3 text-sm text-slate-500 hover:text-slate-300 transition-colors"
+                        className="flex items-center gap-1.5 mt-3 text-sm text-td-text-faint hover:text-td-text-secondary transition-colors"
                       >
                         <MessageCircle size={13} />
                         댓글 {idea.comments.length > 0 && `(${idea.comments.length})`}
@@ -343,7 +343,7 @@ export default function Ideas() {
 
                 {/* Comments section */}
                 {isExpanded && !isEditing && (
-                  <div className="border-t border-white/5 bg-white/[0.02] px-4 py-3 space-y-2">
+                  <div className="border-t border-td-border-subtle bg-td-surface-alt px-4 py-3 space-y-2">
                     {idea.comments.map((c) => {
                       const cAuthor = members.find((m) => m.id === c.authorId);
                       const canEditComment = (myMember?.id === c.authorId) || canManage;
@@ -353,29 +353,29 @@ export default function Ideas() {
                           {cAuthor && <Avatar name={cAuthor.name} color={cAuthor.avatarColor} avatarUrl={cAuthor.avatarUrl} size={22} />}
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-white">{cAuthor?.name ?? '알 수 없음'}</span>
-                              <span className="text-xs text-slate-600">{formatRelativeDate(c.createdAt)}</span>
+                              <span className="text-xs font-medium text-td-text">{cAuthor?.name ?? '알 수 없음'}</span>
+                              <span className="text-xs text-td-text-faint">{formatRelativeDate(c.createdAt)}</span>
                               {canEditComment && !isEditingComment && (
                                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  {myMember?.id === c.authorId && <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-slate-600 hover:text-teal-400"><Pencil size={10} /></button>}
-                                  <button onClick={() => removeComment(idea.id, c.id)} className="p-0.5 text-slate-600 hover:text-red-400"><Trash2 size={10} /></button>
+                                  {myMember?.id === c.authorId && <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-td-text-faint hover:text-teal-400"><Pencil size={10} /></button>}
+                                  <button onClick={() => removeComment(idea.id, c.id)} className="p-0.5 text-td-text-faint hover:text-red-400"><Trash2 size={10} /></button>
                                 </div>
                               )}
                             </div>
                             {isEditingComment ? (
                               <div className="flex items-center gap-2 mt-1">
                                 <input type="text" value={editCommentContent} onChange={(e) => setEditCommentContent(e.target.value)} autoFocus
-                                  className="flex-1 min-w-0 px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-xs text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                                  className="flex-1 min-w-0 px-2 py-1 bg-td-input border border-td-input-border rounded-lg text-xs text-td-text focus:outline-none focus:ring-1 focus:ring-teal-500/50"
                                   onKeyDown={(e) => {
                                     if (e.key === 'Enter' && editCommentContent.trim()) { updateComment(idea.id, c.id, editCommentContent.trim()); setEditingCommentId(null); }
                                     if (e.key === 'Escape') setEditingCommentId(null);
                                   }}
                                 />
                                 <button onClick={() => { if (editCommentContent.trim()) { updateComment(idea.id, c.id, editCommentContent.trim()); setEditingCommentId(null); } }} className="p-1 text-teal-400"><Check size={12} /></button>
-                                <button onClick={() => setEditingCommentId(null)} className="p-1 text-slate-400"><X size={12} /></button>
+                                <button onClick={() => setEditingCommentId(null)} className="p-1 text-td-text-muted"><X size={12} /></button>
                               </div>
                             ) : (
-                              <p className="text-sm text-slate-400 mt-0.5">{c.content}</p>
+                              <p className="text-sm text-td-text-muted mt-0.5">{c.content}</p>
                             )}
                           </div>
                         </div>
@@ -389,7 +389,7 @@ export default function Ideas() {
                         value={commentInput}
                         onChange={(e) => setCommentInput(e.target.value)}
                         placeholder="댓글 작성..."
-                        className="flex-1 min-w-0 px-2.5 py-1.5 bg-white/10 border border-white/10 rounded-lg text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                        className="flex-1 min-w-0 px-2.5 py-1.5 bg-td-input border border-td-border rounded-lg text-xs text-td-text placeholder-td-text-faint focus:outline-none focus:ring-1 focus:ring-teal-500/50"
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && commentInput.trim() && myMember) {
                             addComment(idea.id, myMember.id, commentInput.trim());
@@ -422,7 +422,7 @@ export default function Ideas() {
       {/* Upload progress overlay */}
       {uploading && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-[#1a1825] border border-white/10 rounded-2xl p-6 text-center max-w-xs w-full mx-4 shadow-2xl">
+          <div className="bg-td-overlay border border-td-border rounded-2xl p-6 text-center max-w-xs w-full mx-4 shadow-2xl">
             <div className="relative w-14 h-14 mx-auto mb-4">
               <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
                 <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
@@ -434,11 +434,11 @@ export default function Ideas() {
               </svg>
               <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-teal-400">{uploadPercent}%</span>
             </div>
-            <p className="text-white font-medium mb-1">{uploadStatus || '준비 중...'}</p>
-            <p className="text-sm text-slate-400 truncate mb-3">{uploadingName}</p>
+            <p className="text-td-text font-medium mb-1">{uploadStatus || '준비 중...'}</p>
+            <p className="text-sm text-td-text-muted truncate mb-3">{uploadingName}</p>
             <button
               onClick={() => cancelUpload()}
-              className="px-4 py-1.5 bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 hover:bg-white/20 hover:text-white transition-colors"
+              className="px-4 py-1.5 bg-td-input border border-td-border rounded-lg text-xs text-td-text-secondary hover:bg-td-hover-strong hover:text-td-text transition-colors"
             >
               취소
             </button>

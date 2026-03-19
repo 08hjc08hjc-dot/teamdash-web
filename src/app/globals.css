@@ -2,11 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme Variables ─── */
+:root {
+  --td-bg: #f1f5f9;
+  --td-bg-soft: rgba(241,245,249,0.9);
+  --td-card: #ffffff;
+  --td-card-hover: #f8fafc;
+  --td-surface: #f1f5f9;
+  --td-surface-alt: #f8fafc;
+  --td-input: #f1f5f9;
+  --td-input-border: #cbd5e1;
+  --td-text: #0f172a;
+  --td-text-bright: #1e293b;
+  --td-text-secondary: #475569;
+  --td-text-muted: #64748b;
+  --td-text-faint: #94a3b8;
+  --td-border: #e2e8f0;
+  --td-border-subtle: #f1f5f9;
+  --td-border-strong: #cbd5e1;
+  --td-hover: #f1f5f9;
+  --td-hover-strong: #e2e8f0;
+  --td-sidebar: rgba(255,255,255,0.95);
+  --td-overlay: #ffffff;
+  --td-select: #ffffff;
+  --td-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --td-glass-bg: rgba(255,255,255,0.7);
+  --td-glass-strong: rgba(255,255,255,0.85);
+  --td-glass-border: rgba(0,0,0,0.08);
+  --td-glass-border-strong: rgba(0,0,0,0.12);
+  --td-scrollbar-track: rgba(0,0,0,0.03);
+  --td-scrollbar-thumb: rgba(13,148,136,0.25);
+  --td-scrollbar-hover: rgba(13,148,136,0.4);
+}
+
+.dark {
+  --td-bg: #0f0d1a;
+  --td-bg-soft: rgba(15,13,26,0.8);
+  --td-card: rgba(255,255,255,0.05);
+  --td-card-hover: rgba(255,255,255,0.1);
+  --td-surface: rgba(255,255,255,0.03);
+  --td-surface-alt: rgba(255,255,255,0.02);
+  --td-input: rgba(255,255,255,0.1);
+  --td-input-border: rgba(255,255,255,0.2);
+  --td-text: #ffffff;
+  --td-text-bright: #e2e8f0;
+  --td-text-secondary: #94a3b8;
+  --td-text-muted: #64748b;
+  --td-text-faint: #475569;
+  --td-border: rgba(255,255,255,0.1);
+  --td-border-subtle: rgba(255,255,255,0.05);
+  --td-border-strong: rgba(255,255,255,0.15);
+  --td-hover: rgba(255,255,255,0.05);
+  --td-hover-strong: rgba(255,255,255,0.1);
+  --td-sidebar: rgba(15,13,26,0.9);
+  --td-overlay: #1a1825;
+  --td-select: #1e293b;
+  --td-shadow: none;
+  --td-glass-bg: rgba(255,255,255,0.06);
+  --td-glass-strong: rgba(255,255,255,0.1);
+  --td-glass-border: rgba(255,255,255,0.1);
+  --td-glass-border-strong: rgba(255,255,255,0.15);
+  --td-scrollbar-track: rgba(255,255,255,0.03);
+  --td-scrollbar-thumb: rgba(13,148,136,0.3);
+  --td-scrollbar-hover: rgba(13,148,136,0.5);
+}
+
 body {
   margin: 0;
   font-family: 'Freesentation', sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  background: var(--td-bg);
 }
 
 /* Hide scrollbars on mobile & tablet */
@@ -31,17 +97,17 @@ body {
 
 /* Glass utility classes */
 .glass {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--td-glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--td-glass-border);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--td-glass-strong);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--td-glass-border-strong);
 }
 
 /* Custom scrollbar - glass theme */
@@ -51,26 +117,26 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--td-scrollbar-track);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(13, 148, 136, 0.3);
+  background: var(--td-scrollbar-thumb);
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 148, 136, 0.5);
+  background: var(--td-scrollbar-hover);
   background-clip: padding-box;
 }
 
 /* Styled scrollbar for inner sections */
 .scroll-section {
   scrollbar-width: thin;
-  scrollbar-color: rgba(13, 148, 136, 0.3) rgba(255, 255, 255, 0.03);
+  scrollbar-color: var(--td-scrollbar-thumb) var(--td-scrollbar-track);
 }
 
 .scroll-section::-webkit-scrollbar {
@@ -78,18 +144,18 @@ body {
 }
 
 .scroll-section::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--td-scrollbar-track);
   border-radius: 3px;
   margin: 4px 0;
 }
 
 .scroll-section::-webkit-scrollbar-thumb {
-  background: rgba(13, 148, 136, 0.25);
+  background: var(--td-scrollbar-thumb);
   border-radius: 3px;
 }
 
 .scroll-section::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 148, 136, 0.45);
+  background: var(--td-scrollbar-hover);
 }
 
 /* Progress bar entrance animation */

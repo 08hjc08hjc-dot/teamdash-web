@@ -65,11 +65,11 @@ export default function Activities() {
 
   return (
     <div>
-      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-teal-400 mb-4 transition-colors">
+      <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-td-text-muted hover:text-teal-400 mb-4 transition-colors">
         <ArrowLeft size={16} /> 대시보드로
       </Link>
 
-      <h2 className="text-2xl font-bold text-white mb-4">활동 내역</h2>
+      <h2 className="text-2xl font-bold text-td-text mb-4">활동 내역</h2>
 
       {/* Filter */}
       <div className="flex gap-2 flex-wrap mb-4">
@@ -80,7 +80,7 @@ export default function Activities() {
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
               filter === opt.value
                 ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
-                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
             }`}
           >
             {opt.label}
@@ -90,31 +90,31 @@ export default function Activities() {
 
       {/* Activity list */}
       {filtered.length === 0 ? (
-        <p className="text-sm text-slate-400 text-center py-12">활동 내역이 없습니다</p>
+        <p className="text-sm text-td-text-muted text-center py-12">활동 내역이 없습니다</p>
       ) : (
         <div className="space-y-1">
           {filtered.map((act) => {
             const actor = members.find((m) => m.id === act.actorId);
             const Icon = ACTIVITY_ICONS[act.type];
             return (
-              <div key={act.id} className="flex items-start gap-3 py-3 px-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl hover:bg-white/8 transition-all">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+              <div key={act.id} className="flex items-start gap-3 py-3 px-4 bg-td-card backdrop-blur-xl border border-td-border rounded-xl hover:bg-td-hover-strong transition-all">
+                <div className="w-8 h-8 rounded-full bg-td-input flex items-center justify-center shrink-0 mt-0.5">
                   <Icon size={14} className="text-teal-400" />
                 </div>
                 {actor && <Avatar name={actor.name} color={actor.avatarColor} avatarUrl={actor.avatarUrl} size={32} />}
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-slate-300">
-                    <span className="font-semibold text-white">{actor?.name ?? '알 수 없음'}</span>{' '}
+                  <p className="text-sm text-td-text-secondary">
+                    <span className="font-semibold text-td-text">{actor?.name ?? '알 수 없음'}</span>{' '}
                     {ACTIVITY_LABELS[act.type]}{' '}
-                    <span className="font-semibold text-white">{act.targetTitle}</span>
+                    <span className="font-semibold text-td-text">{act.targetTitle}</span>
                     {act.metadata?.from && (
-                      <span className="text-slate-400"> ({act.metadata.from} → {act.metadata.to})</span>
+                      <span className="text-td-text-muted"> ({act.metadata.from} → {act.metadata.to})</span>
                     )}
                     {act.metadata?.milestone && !act.metadata?.from && (
-                      <span className="text-slate-400"> — {act.metadata.milestone}{act.metadata.status ? ` (${act.metadata.status})` : ''}</span>
+                      <span className="text-td-text-muted"> — {act.metadata.milestone}{act.metadata.status ? ` (${act.metadata.status})` : ''}</span>
                     )}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{formatRelativeDate(act.createdAt)}</p>
+                  <p className="text-xs text-td-text-faint mt-0.5">{formatRelativeDate(act.createdAt)}</p>
                 </div>
               </div>
             );

@@ -52,11 +52,11 @@ export function PhotoCropDialog({ open, imageSrc, onConfirm, onCancel }: PhotoCr
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onCancel} />
 
       {/* Dialog */}
-      <div className="relative w-[90vw] max-w-sm bg-[#1a1625] border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-[90vw] max-w-sm bg-td-overlay border border-td-border rounded-2xl overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-          <h3 className="text-sm font-semibold text-white">사진 자르기</h3>
-          <button onClick={onCancel} className="p-1 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-td-border">
+          <h3 className="text-sm font-semibold text-td-text">사진 자르기</h3>
+          <button onClick={onCancel} className="p-1 text-td-text-muted hover:text-td-text hover:bg-td-hover-strong rounded-lg transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -77,8 +77,8 @@ export function PhotoCropDialog({ open, imageSrc, onConfirm, onCancel }: PhotoCr
         </div>
 
         {/* Zoom control */}
-        <div className="flex items-center gap-3 px-4 py-3 border-t border-white/10">
-          <ZoomOut size={14} className="text-slate-400 shrink-0" />
+        <div className="flex items-center gap-3 px-4 py-3 border-t border-td-border">
+          <ZoomOut size={14} className="text-td-text-muted shrink-0" />
           <input
             type="range"
             min={1}
@@ -86,18 +86,18 @@ export function PhotoCropDialog({ open, imageSrc, onConfirm, onCancel }: PhotoCr
             step={0.05}
             value={zoom}
             onChange={(e) => setZoom(Number(e.target.value))}
-            className="flex-1 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-teal-500
+            className="flex-1 h-1 bg-td-input rounded-full appearance-none cursor-pointer accent-teal-500
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
               [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-teal-400 [&::-webkit-slider-thumb]:shadow-lg"
           />
-          <ZoomIn size={14} className="text-slate-400 shrink-0" />
+          <ZoomIn size={14} className="text-td-text-muted shrink-0" />
         </div>
 
         {/* Actions */}
         <div className="flex gap-2 px-4 pb-4">
           <button
             onClick={onCancel}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/5 transition-colors"
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium text-td-text-secondary hover:bg-td-hover transition-colors"
           >
             <X size={14} /> 취소
           </button>

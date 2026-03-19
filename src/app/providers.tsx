@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+import { Menu, Sun, Moon } from 'lucide-react';
 import { Sidebar } from '../components/layout/Sidebar';
 import { useAuthStore, useTeamStore, useProjectStore, useTaskStore, useActivityStore, useSettingsStore } from '../store';
 import { SEED_MEMBERS, SEED_PROJECTS, SEED_TASKS, SEED_ACTIVITIES } from '../utils/seedData';
@@ -29,8 +29,10 @@ function ensureSeedData() {
 
 function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const themeMode = useSettingsStore((s) => s.themeMode);
 
   useEffect(() => {
+    if (themeMode === 'light') return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -53,13 +55,34 @@ function AnimatedBackground() {
       cancelled = true;
       if (gradient && typeof gradient.pause === 'function') gradient.pause();
     };
-  }, []);
+  }, [themeMode]);
+
+  if (themeMode === 'light') return null;
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full pointer-events-none z-0"
     />
+  );
+}
+
+function ThemeToggle() {
+  const themeMode = useSettingsStore((s) => s.themeMode);
+  const setThemeMode = useSettingsStore((s) => s.setThemeMode);
+
+  return (
+    <button
+      onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+      className="p-2 rounded-xl bg-td-card border border-td-border hover:bg-td-hover-strong transition-colors"
+      title={themeMode === 'dark' ? '라이트 모드' : '다크 모드'}
+    >
+      {themeMode === 'dark' ? (
+        <Sun size={16} className="text-amber-400" />
+      ) : (
+        <Moon size={16} className="text-td-text-muted" />
+      )}
+    </button>
   );
 }
 
@@ -75,7 +98,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
   }, [myMember?.id]);
 
   return (
-    <div className="bg-[#0f0d1a] min-h-screen overflow-hidden">
+    <div className="bg-td-bg min-h-screen overflow-hidden">
       <AnimatedBackground />
 
       <div className="flex h-screen relative z-10">
@@ -88,22 +111,30 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Top bar (phone only) */}
-          <header className="flex items-center justify-between px-4 border-b border-white/10 bg-[#0f0d1a]/80 backdrop-blur-xl md:hidden shrink-0 pt-[calc(0.75rem+env(safe-area-inset-top))] h-[calc(4.5rem+env(safe-area-inset-top))]">
+          <header className="flex items-center justify-between px-4 border-b border-td-border bg-td-bg-soft backdrop-blur-xl md:hidden shrink-0 pt-[calc(0.75rem+env(safe-area-inset-top))] h-[calc(4.5rem+env(safe-area-inset-top))]">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-xl active:bg-white/10 transition-colors"
+                className="p-2 rounded-xl active:bg-td-hover-strong transition-colors"
               >
-                <Menu size={18} className="text-slate-300" />
+                <Menu size={18} className="text-td-text-secondary" />
               </button>
               <Link href="/" className="text-base font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
             </div>
-            {authUser && (
-              <Link href="/settings">
-                <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={30} />
-              </Link>
-            )}
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              {authUser && (
+                <Link href="/settings">
+                  <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={30} />
+                </Link>
+              )}
+            </div>
           </header>
+
+          {/* Desktop top-right theme toggle */}
+          <div className="hidden md:flex items-center gap-2 absolute top-4 right-6 z-20 lg:top-5">
+            <ThemeToggle />
+          </div>
 
           {/* Main content */}
           <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 md:pt-[calc(2.5rem+env(safe-area-inset-top))] lg:pt-8 pb-[calc(3rem+env(safe-area-inset-bottom))] sm:pb-6 md:pb-[calc(3rem+env(safe-area-inset-bottom))]">
@@ -118,19 +149,31 @@ function AppShell({ children }: { children: React.ReactNode }) {
 export default function Providers({ children }: { children: React.ReactNode }) {
   ensureSeedData();
 
+  const themeMode = useSettingsStore((s) => s.themeMode);
+
   useEffect(() => {
     const cleanup = initFirestoreSync();
     return cleanup;
   }, []);
 
+  // Apply .dark class to <html>
+  useEffect(() => {
+    const html = document.documentElement;
+    if (themeMode === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  }, [themeMode]);
+
   const user = useAuthStore((s) => s.user);
 
   if (!GOOGLE_CLIENT_ID) {
     return (
-      <div className="min-h-screen bg-[#0f0d1a] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-td-bg flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-red-400 font-medium mb-2">NEXT_PUBLIC_GOOGLE_CLIENT_ID가 설정되지 않았습니다</p>
-          <p className="text-slate-500 text-sm">.env 파일에 Google OAuth Client ID를 추가하세요</p>
+          <p className="text-td-text-faint text-sm">.env 파일에 Google OAuth Client ID를 추가하세요</p>
         </div>
       </div>
     );

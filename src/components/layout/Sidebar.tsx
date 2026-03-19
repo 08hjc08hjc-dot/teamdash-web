@@ -61,26 +61,26 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
       {/* Mobile slide-out sidebar (phone only) */}
       <aside
         className={`
-          fixed top-0 left-0 z-50 h-full w-64 bg-[#0f0d1a]/90 backdrop-blur-2xl border-r border-white/10
+          fixed top-0 left-0 z-50 h-full w-64 bg-td-sidebar backdrop-blur-2xl border-r border-td-border
           transform transition-transform duration-200 ease-in-out
           flex flex-col md:hidden
           ${open ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <div className="flex items-center justify-between h-16 px-5 border-b border-white/10 shrink-0 pt-[env(safe-area-inset-top)]">
+        <div className="flex items-center justify-between h-16 px-5 border-b border-td-border shrink-0 pt-[env(safe-area-inset-top)]">
           <Link href="/" onClick={onClose} className="text-xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
-          <button onClick={onClose} className="p-1.5 rounded-lg active:bg-white/10 transition-colors">
-            <X size={18} className="text-slate-400" />
+          <button onClick={onClose} className="p-1.5 rounded-lg active:bg-td-hover-strong transition-colors">
+            <X size={18} className="text-td-text-muted" />
           </button>
         </div>
 
         {authUser && (
-          <Link href="/settings" onClick={onClose} className="block px-4 py-4 border-b border-white/5 active:bg-white/5 transition-colors">
+          <Link href="/settings" onClick={onClose} className="block px-4 py-4 border-b border-td-border-subtle active:bg-td-hover transition-colors">
             <div className="flex items-center gap-3">
               <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={36} />
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{authUser.name}</p>
-                <p className="text-xs text-slate-500 truncate">{authUser.email}</p>
+                <p className="text-sm font-semibold text-td-text truncate">{authUser.name}</p>
+                <p className="text-xs text-td-text-faint truncate">{authUser.email}</p>
               </div>
             </div>
           </Link>
@@ -107,7 +107,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
 
                   onClick={onClose}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 ${
-                    isActive ? 'text-teal-300' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                    isActive ? 'text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
                   }`}
                 >
                   <Icon size={18} />
@@ -118,10 +118,10 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
           </div>
         </nav>
 
-        <div className="p-3 border-t border-white/5 shrink-0">
+        <div className="p-3 border-t border-td-border-subtle shrink-0">
           <button
             onClick={() => { logout(); onClose(); }}
-            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all"
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-td-text-muted hover:bg-red-500/10 hover:text-red-400 transition-all"
           >
             <LogOut size={18} />
             로그아웃
@@ -133,22 +133,22 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
       <aside
         className={`
           hidden md:flex md:flex-col md:static md:z-auto h-full
-          bg-[#0f0d1a]/90 backdrop-blur-2xl border-r border-white/10
+          bg-td-sidebar backdrop-blur-2xl border-r border-td-border
           transition-all duration-200 ease-in-out shrink-0
           ${collapsed ? 'w-[4.5rem]' : 'w-64'}
         `}
       >
         {/* Header */}
-        <div className={`flex items-center border-b border-white/10 shrink-0 pt-[calc(2.5rem+env(safe-area-inset-top))] pb-4 lg:pt-5 lg:pb-4 ${collapsed ? 'justify-center px-2' : 'justify-between px-5'}`}>
+        <div className={`flex items-center border-b border-td-border shrink-0 pt-[calc(2.5rem+env(safe-area-inset-top))] pb-4 lg:pt-5 lg:pb-4 ${collapsed ? 'justify-center px-2' : 'justify-between px-5'}`}>
           {!collapsed && (
             <Link href="/" className="text-xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
           )}
           <button
             onClick={onToggleCollapse}
-            className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+            className="p-2 rounded-xl hover:bg-td-hover-strong transition-colors"
             title={collapsed ? '메뉴 펼치기' : '메뉴 접기'}
           >
-            {collapsed ? <ChevronsRight size={18} className="text-slate-400" /> : <ChevronsLeft size={18} className="text-slate-400" />}
+            {collapsed ? <ChevronsRight size={18} className="text-td-text-muted" /> : <ChevronsLeft size={18} className="text-td-text-muted" />}
           </button>
         </div>
 
@@ -176,7 +176,7 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
                   className={`flex items-center rounded-xl text-sm font-medium transition-colors duration-200 ${
                     collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'
                   } ${
-                    isActive ? 'text-teal-300' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                    isActive ? 'text-teal-300' : 'text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
                   }`}
                 >
                   <Icon size={18} />
@@ -192,13 +192,13 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
           <Link
             href="/settings"
             title={collapsed ? authUser.name : undefined}
-            className={`border-t border-white/5 shrink-0 hover:bg-white/5 transition-colors ${collapsed ? 'p-3 flex justify-center' : 'px-4 py-3 flex items-center gap-3'}`}
+            className={`border-t border-td-border-subtle shrink-0 hover:bg-td-hover transition-colors ${collapsed ? 'p-3 flex justify-center' : 'px-4 py-3 flex items-center gap-3'}`}
           >
             <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={32} />
             {!collapsed && (
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{authUser.name}</p>
-                <p className="text-xs text-slate-500 truncate">{authUser.email}</p>
+                <p className="text-sm font-semibold text-td-text truncate">{authUser.name}</p>
+                <p className="text-xs text-td-text-faint truncate">{authUser.email}</p>
               </div>
             )}
           </Link>

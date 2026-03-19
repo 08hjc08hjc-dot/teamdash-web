@@ -33,7 +33,7 @@ export default function NewProject() {
   if (!canCreateProject) {
     return (
       <div className="text-center py-16">
-        <p className="text-slate-400 font-medium">프로젝트 생성 권한이 없습니다</p>
+        <p className="text-td-text-muted font-medium">프로젝트 생성 권한이 없습니다</p>
         <button onClick={() => router.back()} className="text-teal-400 text-sm mt-2 hover:underline">돌아가기</button>
       </div>
     );
@@ -41,36 +41,36 @@ export default function NewProject() {
 
   return (
     <div className="max-w-xl mx-auto">
-      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-teal-400 mb-4 transition-colors">
+      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-td-text-muted hover:text-teal-400 mb-4 transition-colors">
         <ArrowLeft size={16} /> 뒤로
       </button>
-      <h2 className="text-2xl font-bold text-white mb-6">새 프로젝트</h2>
+      <h2 className="text-2xl font-bold text-td-text mb-6">새 프로젝트</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-1">제목</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-1">제목</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="프로젝트 이름"
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
+            className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text placeholder:text-td-text-faint focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-1">설명</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-1">설명</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="프로젝트 설명"
             rows={3}
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur resize-none"
+            className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text placeholder:text-td-text-faint focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur resize-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">색상</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">색상</label>
           <div className="flex gap-2 flex-wrap">
             {PROJECT_COLORS.map((c) => (
               <button
@@ -87,7 +87,7 @@ export default function NewProject() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">멤버</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">멤버</label>
           <div className="space-y-1">
             {members.map((m) => (
               <button
@@ -97,13 +97,13 @@ export default function NewProject() {
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
                   memberIds.includes(m.id)
                     ? 'bg-teal-500/15 border border-teal-500/20'
-                    : 'bg-white/5 hover:bg-white/10 border border-transparent'
+                    : 'bg-td-card hover:bg-td-hover-strong border border-transparent'
                 }`}
               >
                 <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={28} />
-                <span className="text-sm text-slate-200 flex-1 truncate">{m.name}</span>
+                <span className="text-sm text-td-text-bright flex-1 truncate">{m.name}</span>
                 <div className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
-                  memberIds.includes(m.id) ? 'border-teal-500 bg-teal-500' : 'border-white/20'
+                  memberIds.includes(m.id) ? 'border-teal-500 bg-teal-500' : 'border-td-input-border'
                 }`}>
                   {memberIds.includes(m.id) && <Check size={10} className="text-white" />}
                 </div>

@@ -11,7 +11,7 @@ interface SettingsStore extends AppSettings {
 const KEY = 'teamdash-settings';
 
 export const useSettingsStore = create<SettingsStore>()((set) => ({
-  themeMode: loadFromStorage<AppSettings['themeMode']>(KEY, 'themeMode', 'light'),
+  themeMode: loadFromStorage<AppSettings['themeMode']>(KEY, 'themeMode', 'dark'),
   notificationsEnabled: loadFromStorage<boolean>(KEY, 'notificationsEnabled', true),
   currentUserId: loadFromStorage<string>(KEY, 'currentUserId', ''),
   setThemeMode: (themeMode) => set({ themeMode }),

@@ -45,36 +45,36 @@ export default function NewTask() {
 
   return (
     <div className="max-w-xl mx-auto">
-      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-teal-400 mb-4 transition-colors">
+      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-td-text-muted hover:text-teal-400 mb-4 transition-colors">
         <ArrowLeft size={16} /> 뒤로
       </button>
-      <h2 className="text-2xl font-bold text-white mb-6">새 작업</h2>
+      <h2 className="text-2xl font-bold text-td-text mb-6">새 작업</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-1">제목</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-1">제목</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="작업 제목"
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
+            className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text placeholder:text-td-text-faint focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-1">설명</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-1">설명</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="작업 설명"
             rows={3}
-            className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur resize-none"
+            className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text placeholder:text-td-text-faint focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur resize-none"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">상태</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">상태</label>
           <div className="flex gap-2">
             {statusOptions.map((s) => (
               <button
@@ -84,7 +84,7 @@ export default function NewTask() {
                 className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
                   status === s.value
                     ? 'bg-gradient-to-r from-teal-600 to-teal-500 text-white'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
               >
                 {s.label}
@@ -94,7 +94,7 @@ export default function NewTask() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">우선순위</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">우선순위</label>
           <div className="flex gap-2 flex-wrap">
             {priorityOptions.map((p) => (
               <button
@@ -104,7 +104,7 @@ export default function NewTask() {
                 className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   priority === p
                     ? 'text-white'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
                 style={priority === p ? { backgroundColor: PRIORITY_COLORS[p] } : undefined}
               >
@@ -115,7 +115,7 @@ export default function NewTask() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">프로젝트</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">프로젝트</label>
           <div className="flex gap-2 flex-wrap">
             {projects.map((p) => (
               <button
@@ -125,7 +125,7 @@ export default function NewTask() {
                 className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   projectId === p.id
                     ? 'text-white'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
                 style={projectId === p.id ? { backgroundColor: p.color } : undefined}
               >
@@ -136,7 +136,7 @@ export default function NewTask() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">담당자</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">담당자</label>
           <div className="flex gap-2 flex-wrap">
             {canAssignOthers && (
               <button
@@ -145,7 +145,7 @@ export default function NewTask() {
                 className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   assigneeId === null
                     ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
               >
                 미배정
@@ -159,7 +159,7 @@ export default function NewTask() {
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                   assigneeId === m.id
                     ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
-                    : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
+                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
               >
                 <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={16} />

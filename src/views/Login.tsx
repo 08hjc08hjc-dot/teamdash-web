@@ -37,15 +37,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0d1a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-td-bg flex items-center justify-center p-4">
       <div className="w-full max-w-sm text-center">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent mb-2">
           팀대시
         </h1>
-        <p className="text-slate-400 mb-8">팀 프로젝트 관리를 시작하려면 로그인하세요</p>
+        <p className="text-td-text-muted mb-8">팀 프로젝트 관리를 시작하려면 로그인하세요</p>
 
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-          <p className="text-white font-medium mb-6">Google 계정으로 로그인</p>
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-8">
+          <p className="text-td-text font-medium mb-6">Google 계정으로 로그인</p>
           <div className="flex justify-center">
             <GoogleLogin
               onSuccess={handleSuccess}
@@ -58,7 +58,7 @@ export default function Login() {
           </div>
         </div>
 
-        <p className="text-sm text-slate-500 mt-6">
+        <p className="text-sm text-td-text-faint mt-6">
           로그인하면 대시보드, 프로젝트, 작업을 관리할 수 있습니다
         </p>
       </div>

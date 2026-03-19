@@ -78,13 +78,13 @@ export default function Settings() {
 
   return (
     <div className="max-w-2xl">
-      <h2 className="text-2xl font-bold text-white mb-6">설정</h2>
+      <h2 className="text-2xl font-bold text-td-text mb-6">설정</h2>
 
       {/* Profile */}
       <section className="mb-8">
         <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-1">프로필</h3>
         {authUser && (
-          <div className="flex flex-wrap items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 mt-3">
+          <div className="flex flex-wrap items-center gap-4 bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 mt-3">
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
             <button onClick={() => fileInputRef.current?.click()} className="relative shrink-0 group">
               <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={56} />
@@ -100,7 +100,7 @@ export default function Settings() {
                     value={nameInput}
                     onChange={(e) => setNameInput(e.target.value)}
                     autoFocus
-                    className="flex-1 min-w-0 px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-sm text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                    className="flex-1 min-w-0 px-2 py-1 bg-td-input border border-td-input-border rounded-lg text-sm text-td-text focus:outline-none focus:ring-1 focus:ring-teal-500/50"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && nameInput.trim()) {
                         updateAuth(nameInput.trim());
@@ -124,23 +124,23 @@ export default function Settings() {
                   </button>
                   <button
                     onClick={() => setEditingName(false)}
-                    className="shrink-0 p-1 text-slate-400 hover:bg-white/10 rounded transition-colors"
+                    className="shrink-0 p-1 text-td-text-muted hover:bg-td-hover-strong rounded transition-colors"
                   >
                     <X size={16} />
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-white truncate">{authUser.name}</p>
+                  <p className="text-sm font-semibold text-td-text truncate">{authUser.name}</p>
                   <button
                     onClick={() => { setNameInput(authUser.name); setEditingName(true); }}
-                    className="p-1 text-slate-400 hover:text-teal-400 hover:bg-white/10 rounded transition-colors"
+                    className="p-1 text-td-text-muted hover:text-teal-400 hover:bg-td-hover-strong rounded transition-colors"
                   >
                     <Pencil size={12} />
                   </button>
                 </div>
               )}
-              <p className="text-xs text-slate-400 truncate">{authUser.email}</p>
+              <p className="text-xs text-td-text-muted truncate">{authUser.email}</p>
             </div>
             <button
               onClick={() => { googleLogout(); logout(); }}
@@ -163,11 +163,11 @@ export default function Settings() {
               const isMemberOwner = m.email === OWNER_EMAIL;
               const roles = availableRoles(m.email);
               return (
-                <div key={m.id} className="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl">
+                <div key={m.id} className="flex items-center gap-3 p-3 bg-td-card border border-td-border rounded-xl">
                   <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={32} />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white truncate">{m.name}</p>
-                    <p className="text-xs text-slate-400 truncate">{m.email}</p>
+                    <p className="text-sm font-medium text-td-text truncate">{m.name}</p>
+                    <p className="text-xs text-td-text-muted truncate">{m.email}</p>
                   </div>
                   {isMemberOwner ? (
                     <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/15 text-teal-400 font-medium">소유자</span>
@@ -175,11 +175,11 @@ export default function Settings() {
                     <select
                       value={m.role}
                       onChange={(e) => updateMember(m.id, { role: e.target.value as TeamRole })}
-                      className="bg-[#1e293b] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                      className="bg-td-select border border-td-border rounded-lg px-2 py-1.5 text-xs text-td-text focus:outline-none focus:ring-1 focus:ring-teal-500/50"
                       disabled={roles.length === 0}
                     >
                       {roles.map((r) => (
-                        <option key={r} value={r} className="bg-[#1e293b] text-white">{ROLE_LABELS[r]}</option>
+                        <option key={r} value={r} className="bg-td-select text-td-text">{ROLE_LABELS[r]}</option>
                       ))}
                     </select>
                   )}
@@ -195,7 +195,7 @@ export default function Settings() {
               );
             })}
             {members.length === 0 && (
-              <p className="text-sm text-slate-400 py-4">팀원이 없습니다. 데모 데이터를 불러오거나 직접 추가하세요.</p>
+              <p className="text-sm text-td-text-muted py-4">팀원이 없습니다. 데모 데이터를 불러오거나 직접 추가하세요.</p>
             )}
           </div>
         </section>
@@ -207,13 +207,13 @@ export default function Settings() {
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={handleLoadDemo}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-white/10 rounded-xl text-sm font-medium text-slate-200 hover:bg-white/5 bg-white/5 backdrop-blur-xl transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium text-td-text-bright hover:bg-td-hover bg-td-card backdrop-blur-xl transition-colors"
           >
             <DatabaseBackup size={16} /> 데모 데이터 불러오기
           </button>
           <button
             onClick={() => setClearDialog(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 bg-white/5 backdrop-blur-xl transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 bg-td-card backdrop-blur-xl transition-colors"
           >
             <Trash2 size={16} /> 모든 데이터 삭제
           </button>
@@ -223,14 +223,14 @@ export default function Settings() {
       {/* About */}
       <section>
         <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">정보</h3>
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4">
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4">
           <div className="flex justify-between py-1">
-            <span className="text-sm text-slate-300">버전</span>
-            <span className="text-sm text-white font-medium">1.0.0</span>
+            <span className="text-sm text-td-text-secondary">버전</span>
+            <span className="text-sm text-td-text font-medium">1.0.0</span>
           </div>
           <div className="flex justify-between py-1">
-            <span className="text-sm text-slate-300">기술 스택</span>
-            <span className="text-sm text-white font-medium">Next.js + Tailwind</span>
+            <span className="text-sm text-td-text-secondary">기술 스택</span>
+            <span className="text-sm text-td-text font-medium">Next.js + Tailwind</span>
           </div>
         </div>
       </section>

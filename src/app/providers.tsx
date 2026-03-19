@@ -80,14 +80,13 @@ function ThemeToggle() {
   return (
     <button
       onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-xl bg-td-card border border-td-border hover:bg-td-hover-strong transition-colors"
-      title={themeMode === 'dark' ? '라이트 모드' : '다크 모드'}
+      className="flex items-center gap-1.5 p-1.5 rounded-xl bg-td-card border border-td-border hover:bg-td-hover-strong transition-colors"
     >
-      {themeMode === 'dark' ? (
-        <Sun size={16} className="text-amber-400" />
-      ) : (
-        <Moon size={16} className="text-td-text-muted" />
-      )}
+      <Sun size={13} className={themeMode === 'light' ? 'text-amber-400' : 'text-td-text-faint'} />
+      <div className="relative w-7 h-4 rounded-full bg-td-border transition-colors">
+        <div className={`absolute top-0.5 w-3 h-3 rounded-full shadow transition-all duration-200 ${themeMode === 'dark' ? 'left-[0.875rem] bg-slate-700' : 'left-0.5 bg-white'}`} />
+      </div>
+      <Moon size={13} className={themeMode === 'dark' ? 'text-blue-300' : 'text-td-text-faint'} />
     </button>
   );
 }

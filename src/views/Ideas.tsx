@@ -6,6 +6,7 @@ import { Lightbulb, Plus, X, Check, Trash2, Pencil, MessageCircle, Paperclip, Li
 import { useIdeaStore, useTeamStore, useActivityStore } from '../store';
 import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
 import { setDriveToken, hasDriveToken, uploadToGoogleDrive, cancelUpload } from '../lib/googleDrive';
@@ -65,6 +66,8 @@ export default function Ideas() {
   const [commentInput, setCommentInput] = useState('');
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editCommentContent, setEditCommentContent] = useState('');
+  const [deleteIdeaId, setDeleteIdeaId] = useState<string | null>(null);
+  const [deleteCommentTarget, setDeleteCommentTarget] = useState<{ ideaId: string; commentId: string } | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingName, setUploadingName] = useState('');
   const [uploadPercent, setUploadPercent] = useState(0);
@@ -304,7 +307,7 @@ export default function Ideas() {
                         {canEdit && (
                           <div className="flex items-center gap-1 shrink-0">
                             {isAuthor && <button onClick={() => startEditIdea(idea.id)} title="수정" className="p-1.5 text-td-text-faint hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Pencil size={14} /></button>}
-                            <button onClick={() => removeIdea(idea.id)} title="삭제" className="p-1.5 text-td-text-faint hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
+                            <button onClick={() => setDeleteIdeaId(idea.id)} title="삭제" className="p-1.5 text-td-text-faint hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
                             {canManage && idea.status !== 'accepted' && (
                               <button onClick={() => updateStatus(idea.id, 'accepted')} title="채택" className="p-1.5 text-td-text-faint hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Check size={14} /></button>
                             )}
@@ -358,7 +361,7 @@ export default function Ideas() {
                               {canEditComment && !isEditingComment && (
                                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                                   {myMember?.id === c.authorId && <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-td-text-faint hover:text-teal-400"><Pencil size={10} /></button>}
-                                  <button onClick={() => removeComment(idea.id, c.id)} className="p-0.5 text-td-text-faint hover:text-red-400"><Trash2 size={10} /></button>
+                                  <button onClick={() => setDeleteCommentTarget({ ideaId: idea.id, commentId: c.id })} className="p-0.5 text-td-text-faint hover:text-red-400"><Trash2 size={10} /></button>
                                 </div>
                               )}
                             </div>
@@ -419,6 +422,23 @@ export default function Ideas() {
           })}
         </div>
       )}
+      <ConfirmDialog
+        open={!!deleteIdeaId}
+        title="아이디어 삭제"
+        message="이 아이디어를 삭제하시겠습니까?"
+        confirmLabel="삭제"
+        onConfirm={() => { if (deleteIdeaId) removeIdea(deleteIdeaId); setDeleteIdeaId(null); }}
+        onCancel={() => setDeleteIdeaId(null)}
+      />
+      <ConfirmDialog
+        open={!!deleteCommentTarget}
+        title="댓글 삭제"
+        message="이 댓글을 삭제하시겠습니까?"
+        confirmLabel="삭제"
+        onConfirm={() => { if (deleteCommentTarget) removeComment(deleteCommentTarget.ideaId, deleteCommentTarget.commentId); setDeleteCommentTarget(null); }}
+        onCancel={() => setDeleteCommentTarget(null)}
+      />
+
       {/* Upload progress overlay */}
       {uploading && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">

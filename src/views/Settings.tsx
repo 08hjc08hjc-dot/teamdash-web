@@ -29,6 +29,7 @@ export default function Settings() {
   const { isOwner, isAdmin, member: myMember } = usePermissions();
 
   const [clearDialog, setClearDialog] = useState(false);
+  const [demoDialog, setDemoDialog] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [cropSrc, setCropSrc] = useState<string | null>(null);
@@ -205,18 +206,22 @@ export default function Settings() {
       <section className="mb-8">
         <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">데이터</h3>
         <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handleLoadDemo}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium text-td-text-bright hover:bg-td-hover bg-td-card backdrop-blur-xl transition-colors"
-          >
-            <DatabaseBackup size={16} /> 데모 데이터 불러오기
-          </button>
-          <button
-            onClick={() => setClearDialog(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 bg-td-card backdrop-blur-xl transition-colors"
-          >
-            <Trash2 size={16} /> 모든 데이터 삭제
-          </button>
+          {isOwner && (
+            <>
+              <button
+                onClick={() => setDemoDialog(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium text-td-text-bright hover:bg-td-hover bg-td-card backdrop-blur-xl transition-colors"
+              >
+                <DatabaseBackup size={16} /> 데모 데이터 불러오기
+              </button>
+              <button
+                onClick={() => setClearDialog(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 border border-red-500/30 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 bg-td-card backdrop-blur-xl transition-colors"
+              >
+                <Trash2 size={16} /> 모든 데이터 삭제
+              </button>
+            </>
+          )}
         </div>
       </section>
 
@@ -242,6 +247,15 @@ export default function Settings() {
         confirmLabel="삭제"
         onConfirm={handleClearAll}
         onCancel={() => setClearDialog(false)}
+      />
+
+      <ConfirmDialog
+        open={demoDialog}
+        title="데모 데이터 불러오기"
+        message="현재 데이터를 덮어쓰고 데모 데이터를 불러오시겠습니까?"
+        confirmLabel="불러오기"
+        onConfirm={() => { handleLoadDemo(); setDemoDialog(false); }}
+        onCancel={() => setDemoDialog(false)}
       />
 
       <PhotoCropDialog

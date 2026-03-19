@@ -132,7 +132,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Desktop top-right theme toggle */}
-          <div className="hidden md:flex items-center gap-2 absolute top-4 right-6 z-20 lg:top-5">
+          <div className="hidden md:flex items-center gap-2 fixed top-4 right-6 z-30 lg:top-5">
             <ThemeToggle />
           </div>
 

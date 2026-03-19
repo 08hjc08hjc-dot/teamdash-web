@@ -40,7 +40,7 @@ function AnimatedBackground() {
 
     const colors = themeMode === 'dark'
       ? ['#061a20', '#08232b', '#041518', '#020d11']
-      : ['#e0f2fe', '#ccfbf1', '#dbeafe', '#d1fae5'];
+      : ['#e0f7fa', '#b2dfdb', '#ccfbf1', '#e0f2f1'];
 
     (async () => {
       const { WaveGradient } = await import('wave-gradient');
@@ -123,7 +123,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
               <Link href="/" className="text-base font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
             </div>
             <div className="flex items-center gap-2">
-              <ThemeToggle />
               {authUser && (
                 <Link href="/settings">
                   <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={30} />
@@ -131,11 +130,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
           </header>
-
-          {/* Desktop top-right theme toggle */}
-          <div className="hidden md:flex items-center gap-2 fixed top-4 right-6 z-30 lg:top-5">
-            <ThemeToggle />
-          </div>
 
           {/* Main content */}
           <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 md:pt-[calc(2.5rem+env(safe-area-inset-top))] lg:pt-8 pb-[calc(3rem+env(safe-area-inset-bottom))] sm:pb-6 md:pb-[calc(3rem+env(safe-area-inset-bottom))]">

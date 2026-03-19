@@ -3,8 +3,8 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, ClipboardCheck, Users, Lightbulb, Settings, X, LogOut, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { useAuthStore, useTeamStore } from '../../store';
+import { LayoutDashboard, FolderKanban, ClipboardCheck, Users, Lightbulb, Settings, X, LogOut, ChevronsLeft, ChevronsRight, Sun, Moon } from 'lucide-react';
+import { useAuthStore, useTeamStore, useSettingsStore } from '../../store';
 import { Avatar } from '../ui/Avatar';
 
 const NAV_ITEMS = [
@@ -40,6 +40,9 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
   const authUser = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const members = useTeamStore((s) => s.members);
+  const themeMode = useSettingsStore((s) => s.themeMode);
+  const setThemeMode = useSettingsStore((s) => s.setThemeMode);
+  const toggleTheme = () => setThemeMode(themeMode === 'dark' ? 'light' : 'dark');
   const myMember = members.find((m) => m.email === authUser?.email);
   const pathname = usePathname() ?? '/';
   const activeIdx = useMemo(() => getActiveIndex(pathname), [pathname]);
@@ -118,7 +121,14 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
           </div>
         </nav>
 
-        <div className="p-3 border-t border-td-border-subtle shrink-0">
+        <div className="p-3 border-t border-td-border-subtle shrink-0 space-y-1">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all"
+          >
+            {themeMode === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+            {themeMode === 'dark' ? '라이트 모드' : '다크 모드'}
+          </button>
           <button
             onClick={() => { logout(); onClose(); }}
             className="flex items-center gap-3 w-full px-4 py-2.5 rounded-xl text-sm font-medium text-td-text-muted hover:bg-red-500/10 hover:text-red-400 transition-all"
@@ -186,6 +196,18 @@ export function Sidebar({ open, onClose, collapsed, onToggleCollapse }: SidebarP
             })}
           </div>
         </nav>
+
+        {/* Theme toggle */}
+        <div className={`border-t border-td-border-subtle shrink-0 ${collapsed ? 'p-2' : 'p-3'}`}>
+          <button
+            onClick={toggleTheme}
+            title={collapsed ? (themeMode === 'dark' ? '라이트 모드' : '다크 모드') : undefined}
+            className={`flex items-center rounded-xl text-sm font-medium text-td-text-muted hover:bg-td-hover hover:text-td-text-bright transition-all w-full ${collapsed ? 'justify-center p-3' : 'gap-3 px-4 py-2.5'}`}
+          >
+            {themeMode === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+            {!collapsed && (themeMode === 'dark' ? '라이트 모드' : '다크 모드')}
+          </button>
+        </div>
 
         {/* User profile (bottom) */}
         {authUser && (

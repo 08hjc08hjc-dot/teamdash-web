@@ -123,6 +123,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
               <Link href="/" className="text-base font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
             </div>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               {authUser && (
                 <Link href="/settings">
                   <Avatar name={authUser.name} color={myMember?.avatarColor ?? '#0d9488'} avatarUrl={myMember?.avatarUrl} size={30} />

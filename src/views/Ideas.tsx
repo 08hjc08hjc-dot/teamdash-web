@@ -262,7 +262,7 @@ export default function Ideas() {
                         {/* Actions */}
                         {canEdit && (
                           <div className="flex items-center gap-1 shrink-0">
-                            <button onClick={() => startEditIdea(idea.id)} title="수정" className="p-1.5 text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Pencil size={14} /></button>
+                            {isAuthor && <button onClick={() => startEditIdea(idea.id)} title="수정" className="p-1.5 text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Pencil size={14} /></button>}
                             <button onClick={() => removeIdea(idea.id)} title="삭제" className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"><Trash2 size={14} /></button>
                             {canManage && idea.status !== 'accepted' && (
                               <button onClick={() => updateStatus(idea.id, 'accepted')} title="채택" className="p-1.5 text-slate-500 hover:text-teal-400 hover:bg-teal-500/10 rounded-lg transition-colors"><Check size={14} /></button>
@@ -316,7 +316,7 @@ export default function Ideas() {
                               <span className="text-[10px] text-slate-600">{formatRelativeDate(c.createdAt)}</span>
                               {canEditComment && !isEditingComment && (
                                 <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-slate-600 hover:text-teal-400"><Pencil size={10} /></button>
+                                  {myMember?.id === c.authorId && <button onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }} className="p-0.5 text-slate-600 hover:text-teal-400"><Pencil size={10} /></button>}
                                   <button onClick={() => removeComment(idea.id, c.id)} className="p-0.5 text-slate-600 hover:text-red-400"><Trash2 size={10} /></button>
                                 </div>
                               )}

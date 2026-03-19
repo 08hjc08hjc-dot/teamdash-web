@@ -2,7 +2,13 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from './firebase';
 
 const COLLECTION = 'teamdash-files';
-const CHUNK_SIZE = 800 * 1024; // ~800KB per chunk (fits in 1MB document)
+const CHUNK_SIZE = 800 * 1024;
+
+let _cancelled = false;
+
+export function cancelFileUpload() {
+  _cancelled = true;
+}
 
 function generateFileId(): string {
   return `f_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -17,7 +23,11 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export async function uploadFileToFirestore(file: File): Promise<string> {
+export async function uploadFileToFirestore(
+  file: File,
+  onProgress?: (percent: number) => void,
+): Promise<string> {
+  _cancelled = false;
   const fileId = generateFileId();
   const base64 = await fileToBase64(file);
 
@@ -26,18 +36,22 @@ export async function uploadFileToFirestore(file: File): Promise<string> {
     chunks.push(base64.slice(i, i + CHUNK_SIZE));
   }
 
-  await Promise.all(
-    chunks.map((chunk, i) =>
-      setDoc(doc(db, COLLECTION, `${fileId}_${i}`), {
-        fileId,
-        idx: i,
-        total: chunks.length,
-        data: chunk,
-        name: file.name,
-        ts: Date.now(),
-      }),
-    ),
-  );
+  for (let i = 0; i < chunks.length; i++) {
+    if (_cancelled) throw new Error('cancelled');
+
+    await setDoc(doc(db, COLLECTION, `${fileId}_${i}`), {
+      fileId,
+      idx: i,
+      total: chunks.length,
+      data: chunks[i],
+      name: file.name,
+      ts: Date.now(),
+    });
+
+    if (onProgress) {
+      onProgress(Math.round(((i + 1) / chunks.length) * 100));
+    }
+  }
 
   return `fs://${fileId}`;
 }

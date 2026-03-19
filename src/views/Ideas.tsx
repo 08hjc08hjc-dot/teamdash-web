@@ -7,7 +7,7 @@ import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
-import { uploadToGoogleDrive, cancelUpload } from '../lib/googleDrive';
+import { uploadFileToFirestore, downloadFileFromFirestore, cancelFileUpload } from '../lib/firestoreFiles';
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -79,7 +79,7 @@ export default function Ideas() {
     setUploadingName(file.name);
     setUploadPercent(0);
     try {
-      const url = await uploadToGoogleDrive(file, (p) => setUploadPercent(p));
+      const url = await uploadFileToFirestore(file, (p) => setUploadPercent(p));
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
@@ -131,6 +131,24 @@ export default function Ideas() {
     return null;
   };
 
+  const handleFileDownload = async (att: IdeaAttachment) => {
+    let url = att.url;
+    if (url.startsWith('fs://')) {
+      try {
+        url = await downloadFileFromFirestore(url);
+      } catch {
+        alert('파일 다운로드에 실패했습니다.');
+        return;
+      }
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = att.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const renderAttachments = (atts: IdeaAttachment[], onRemove?: (id: string) => void) => (
     atts.length > 0 && (
       <div className="flex flex-wrap gap-2 mt-2">
@@ -140,7 +158,7 @@ export default function Ideas() {
             {att.type === 'link' ? (
               <a href={att.url} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline truncate max-w-[200px]">{att.name}</a>
             ) : (
-              <a href={att.url} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-teal-400 hover:underline truncate max-w-[200px] cursor-pointer">{att.name}</a>
+              <button onClick={() => handleFileDownload(att)} className="text-slate-300 hover:text-teal-400 hover:underline truncate max-w-[200px] cursor-pointer">{att.name}</button>
             )}
             {onRemove && (
               <button onClick={() => onRemove(att.id)} className="text-slate-500 hover:text-red-400 ml-1"><X size={12} /></button>
@@ -410,7 +428,7 @@ export default function Ideas() {
             <p className="text-white font-medium mb-1">파일 업로드 중...</p>
             <p className="text-sm text-slate-400 truncate mb-3">{uploadingName}</p>
             <button
-              onClick={() => cancelUpload()}
+              onClick={() => cancelFileUpload()}
               className="px-4 py-1.5 bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 hover:bg-white/20 hover:text-white transition-colors"
             >
               취소

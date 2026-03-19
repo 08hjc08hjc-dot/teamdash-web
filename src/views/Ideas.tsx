@@ -7,7 +7,7 @@ import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
-import { uploadFile } from '../lib/firebaseStorage';
+import { uploadFileToFirestore, downloadFileFromFirestore } from '../lib/firestoreFiles';
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -79,12 +79,12 @@ export default function Ideas() {
       return;
     }
     try {
-      const url = await uploadFile(file);
+      const url = await uploadFileToFirestore(file);
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
     } catch (err) {
-      alert('파일 업로드에 실패했습니다. Firebase Storage가 활성화되어 있는지 확인하세요.');
+      alert('파일 업로드에 실패했습니다.');
       console.error('[Upload]', err);
     }
   };
@@ -126,6 +126,24 @@ export default function Ideas() {
     return null;
   };
 
+  const handleFileDownload = async (att: IdeaAttachment) => {
+    let url = att.url;
+    if (url.startsWith('fs://')) {
+      try {
+        url = await downloadFileFromFirestore(url);
+      } catch {
+        alert('파일 다운로드에 실패했습니다.');
+        return;
+      }
+    }
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = att.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const renderAttachments = (atts: IdeaAttachment[], onRemove?: (id: string) => void) => (
     atts.length > 0 && (
       <div className="flex flex-wrap gap-2 mt-2">
@@ -135,7 +153,7 @@ export default function Ideas() {
             {att.type === 'link' ? (
               <a href={att.url} target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:underline truncate max-w-[200px]">{att.name}</a>
             ) : (
-              <a href={att.url} download={att.name} className="text-slate-300 hover:text-teal-400 hover:underline truncate max-w-[200px] cursor-pointer">{att.name}</a>
+              <button onClick={() => handleFileDownload(att)} className="text-slate-300 hover:text-teal-400 hover:underline truncate max-w-[200px] cursor-pointer">{att.name}</button>
             )}
             {onRemove && (
               <button onClick={() => onRemove(att.id)} className="text-slate-500 hover:text-red-400 ml-1"><X size={12} /></button>

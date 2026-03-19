@@ -68,16 +68,10 @@ export default function Ideas() {
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
 
-  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, target: 'new' | 'edit') => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = '';
-    if (file.size > MAX_FILE_SIZE) {
-      alert(`파일 크기가 너무 큽니다 (${(file.size / (1024 * 1024)).toFixed(1)}MB). 최대 50MB까지 첨부할 수 있습니다.`);
-      return;
-    }
     try {
       const url = await uploadToGoogleDrive(file);
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };

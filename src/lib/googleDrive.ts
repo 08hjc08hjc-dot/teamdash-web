@@ -54,7 +54,19 @@ async function getToken(): Promise<string> {
   return requestDriveToken();
 }
 
-export async function uploadToGoogleDrive(file: File): Promise<string> {
+let _currentXhr: XMLHttpRequest | null = null;
+
+export function cancelUpload() {
+  if (_currentXhr) {
+    _currentXhr.abort();
+    _currentXhr = null;
+  }
+}
+
+export async function uploadToGoogleDrive(
+  file: File,
+  onProgress?: (percent: number) => void,
+): Promise<string> {
   const token = await getToken();
 
   const metadata = new Blob(
@@ -66,17 +78,31 @@ export async function uploadToGoogleDrive(file: File): Promise<string> {
   form.append('metadata', metadata);
   form.append('file', file);
 
-  const res = await fetch(
-    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-    { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: form },
-  );
+  const id = await new Promise<string>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    _currentXhr = xhr;
+    xhr.open('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`업로드 실패 (${res.status}): ${text}`);
-  }
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
 
-  const { id } = await res.json();
+    xhr.onload = () => {
+      _currentXhr = null;
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText).id);
+      } else {
+        reject(new Error(`업로드 실패 (${xhr.status}): ${xhr.responseText}`));
+      }
+    };
+
+    xhr.onerror = () => { _currentXhr = null; reject(new Error('네트워크 오류')); };
+    xhr.onabort = () => { _currentXhr = null; reject(new Error('cancelled')); };
+    xhr.send(form);
+  });
 
   await fetch(`https://www.googleapis.com/drive/v3/files/${id}/permissions`, {
     method: 'POST',

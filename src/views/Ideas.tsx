@@ -7,7 +7,7 @@ import { usePermissions } from '../hooks/usePermissions';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
 import type { IdeaStatus, IdeaAttachment, VoteType } from '../models';
-import { uploadToGoogleDrive } from '../lib/googleDrive';
+import { uploadToGoogleDrive, cancelUpload } from '../lib/googleDrive';
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
@@ -66,6 +66,7 @@ export default function Ideas() {
   const [editCommentContent, setEditCommentContent] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadingName, setUploadingName] = useState('');
+  const [uploadPercent, setUploadPercent] = useState(0);
 
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
@@ -76,13 +77,16 @@ export default function Ideas() {
     e.target.value = '';
     setUploading(true);
     setUploadingName(file.name);
+    setUploadPercent(0);
     try {
-      const url = await uploadToGoogleDrive(file);
+      const url = await uploadToGoogleDrive(file, (p) => setUploadPercent(p));
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
     } catch (err) {
-      alert('파일 업로드에 실패했습니다.');
+      if ((err as Error).message !== 'cancelled') {
+        alert('파일 업로드에 실패했습니다.');
+      }
       console.error('[Upload]', err);
     } finally {
       setUploading(false);
@@ -392,9 +396,25 @@ export default function Ideas() {
       {uploading && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-[#1a1825] border border-white/10 rounded-2xl p-6 text-center max-w-xs w-full mx-4 shadow-2xl">
-            <div className="w-10 h-10 border-3 border-teal-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="relative w-14 h-14 mx-auto mb-4">
+              <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+                <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                <circle cx="28" cy="28" r="24" fill="none" stroke="#14b8a6" strokeWidth="4" strokeLinecap="round"
+                  strokeDasharray={`${2 * Math.PI * 24}`}
+                  strokeDashoffset={`${2 * Math.PI * 24 * (1 - uploadPercent / 100)}`}
+                  className="transition-all duration-300"
+                />
+              </svg>
+              <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-teal-400">{uploadPercent}%</span>
+            </div>
             <p className="text-white font-medium mb-1">파일 업로드 중...</p>
-            <p className="text-sm text-slate-400 truncate">{uploadingName}</p>
+            <p className="text-sm text-slate-400 truncate mb-3">{uploadingName}</p>
+            <button
+              onClick={() => cancelUpload()}
+              className="px-4 py-1.5 bg-white/10 border border-white/10 rounded-lg text-xs text-slate-300 hover:bg-white/20 hover:text-white transition-colors"
+            >
+              취소
+            </button>
           </div>
         </div>
       )}

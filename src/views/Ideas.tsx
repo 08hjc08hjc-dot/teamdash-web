@@ -13,14 +13,14 @@ import { setDriveToken, hasDriveToken, uploadToGoogleDrive, cancelUpload } from 
 
 const STATUS_LABELS: Record<IdeaStatus, string> = { open: '검토중', accepted: '채택', rejected: '보류' };
 const STATUS_COLORS: Record<IdeaStatus, string> = {
-  open: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/20',
-  accepted: 'bg-teal-500/15 text-teal-300 border-teal-500/20',
-  rejected: 'bg-slate-500/15 text-slate-400 border-slate-500/20',
+  open: 'bg-yellow-500/30 text-yellow-700 border-yellow-600/30 dark:bg-yellow-500/15 dark:text-yellow-300 dark:border-yellow-500/20',
+  accepted: 'bg-teal-500/30 text-teal-700 border-teal-600/30 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-500/20',
+  rejected: 'bg-slate-500/30 text-slate-600 border-slate-500/30 dark:bg-slate-500/15 dark:text-slate-400 dark:border-slate-500/20',
 };
 const VOTE_CONFIG: { type: VoteType; label: string; activeColor: string }[] = [
-  { type: 'agree', label: '찬성', activeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
-  { type: 'disagree', label: '반대', activeColor: 'bg-red-500/20 text-red-300 border-red-500/30' },
-  { type: 'neutral', label: '중립', activeColor: 'bg-slate-500/20 text-slate-300 border-slate-500/30' },
+  { type: 'agree', label: '찬성', activeColor: 'bg-teal-500/30 text-teal-700 border-teal-600/40 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/30' },
+  { type: 'disagree', label: '반대', activeColor: 'bg-red-500/30 text-red-700 border-red-600/40 dark:bg-red-500/20 dark:text-red-300 dark:border-red-500/30' },
+  { type: 'neutral', label: '중립', activeColor: 'bg-slate-500/30 text-slate-600 border-slate-500/40 dark:bg-slate-500/20 dark:text-slate-300 dark:border-slate-500/30' },
 ];
 const FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: 'all', label: '전체' },
@@ -246,7 +246,7 @@ export default function Ideas() {
       <div className="flex gap-2 flex-wrap mb-4">
         {FILTER_OPTIONS.map((opt) => (
           <button key={opt.value} onClick={() => setFilter(opt.value)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${filter === opt.value ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'}`}>
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${filter === opt.value ? 'bg-teal-500/30 text-teal-700 border border-teal-600/30 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'}`}>
             {opt.label}
           </button>
         ))}

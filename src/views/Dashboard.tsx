@@ -91,7 +91,7 @@ export default function Dashboard() {
             href={to}
             className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong hover:border-td-border-strong transition-all"
           >
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: color + '20' }}>
+            <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: color + '35' }}>
               <Icon size={18} style={{ color }} className="md:!w-5 md:!h-5" />
             </div>
             <p className="text-2xl md:text-3xl font-bold text-td-text pl-2"><AnimatedNumber value={value} /></p>
@@ -118,13 +118,13 @@ export default function Dashboard() {
                     </div>
                     <p className="text-sm font-semibold text-td-text shrink-0 ml-2">{msPct}%</p>
                   </div>
-                  <div className="h-1.5 bg-td-input rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden">
                     <div className="h-full rounded-full bg-teal-500 transition-all animate-bar" style={{ width: `${msPct}%` }} />
                   </div>
                   <div className="flex items-center justify-between mt-1.5">
                     <div className="flex items-center gap-2">
                       {proj && (
-                        <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: proj.color + '15', color: proj.color }}>{proj.title}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: proj.color + '30', color: proj.color }}>{proj.title}</span>
                       )}
                       <span className="text-xs" style={{ color: STATUS_COLORS[task.status] }}>{TASK_STATUS_LABELS[task.status]}</span>
                     </div>
@@ -153,7 +153,7 @@ export default function Dashboard() {
                     </div>
                     <p className="text-sm font-semibold text-td-text shrink-0 ml-2">{pct}%</p>
                   </div>
-                  <div className="h-1.5 bg-td-input rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all animate-bar" style={{ width: `${pct}%`, backgroundColor: project.color }} />
                   </div>
                   <p className="text-xs text-td-text-muted mt-1.5">{done}/{total} 완료</p>

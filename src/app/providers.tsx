@@ -60,7 +60,7 @@ function AnimatedBackground() {
   if (themeMode === 'light') {
     return (
       <div className="fixed inset-0 pointer-events-none z-0 animate-bg-shift"
-        style={{ background: 'linear-gradient(-45deg, #e0f2f1, #b2dfdb, #e0f7fa, #b2dfdb, #ccfbf1, #e0f2f1)', backgroundSize: '300% 300%' }}
+        style={{ background: 'linear-gradient(-45deg, #e2e8f0, #cbd5e1, #e2e8f0, #d1d5db, #e5e7eb, #e2e8f0)', backgroundSize: '300% 300%' }}
       />
     );
   }

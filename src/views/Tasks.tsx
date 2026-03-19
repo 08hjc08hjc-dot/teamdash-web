@@ -37,12 +37,12 @@ function TaskCard({ task }: { task: Task }) {
           <div className="min-w-0">
             <p className="text-sm font-semibold text-td-text hover:text-teal-300 transition-colors leading-snug">{task.title}</p>
           </div>
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '15', color: PRIORITY_COLORS[task.priority] }}>
+          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}>
             {PRIORITY_LABELS[task.priority]}
           </span>
         </div>
         {project && (
-          <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: project.color + '30', color: project.color }}>
+          <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: project.color + '40', color: project.color }}>
             {project.title}
           </span>
         )}
@@ -52,7 +52,7 @@ function TaskCard({ task }: { task: Task }) {
             <span className="text-xs text-td-text-muted">진행률</span>
             <span className="text-sm font-semibold text-teal-400">{msPct}%</span>
           </div>
-          <div className="h-1.5 bg-td-input rounded-full overflow-hidden">
+          <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden">
             <div className="h-full rounded-full transition-all animate-bar" style={{ width: `${msPct}%`, backgroundColor: PRIORITY_COLORS[task.priority] }} />
           </div>
           <p className="text-xs text-td-text-muted mt-1">{msDone}/{msTotal} 완료</p>
@@ -84,7 +84,7 @@ function TaskCard({ task }: { task: Task }) {
                     ? 'text-white cursor-default'
                     : 'bg-td-card hover:bg-td-hover text-td-text-muted hover:text-td-text-bright'
                 }`}
-                style={task.status === s ? { backgroundColor: STATUS_COLORS[s] + '40', color: STATUS_COLORS[s] } : undefined}
+                style={task.status === s ? { backgroundColor: STATUS_COLORS[s] + '50', color: STATUS_COLORS[s] } : undefined}
               >
                 {TASK_STATUS_LABELS[s]}
               </button>
@@ -130,7 +130,7 @@ export default function Tasks() {
           onClick={() => setProjectFilter(undefined)}
           className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all ${
             !projectFilter
-              ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
+              ? 'bg-teal-500/30 text-teal-700 border border-teal-600/30 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
               : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
           }`}
         >
@@ -143,7 +143,7 @@ export default function Tasks() {
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
               projectFilter === p.id ? 'text-white' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
             }`}
-            style={projectFilter === p.id ? { backgroundColor: p.color } : undefined}
+            style={projectFilter === p.id ? { backgroundColor: p.color + 'cc' } : undefined}
           >
             {p.title}
           </button>
@@ -175,7 +175,7 @@ export default function Tasks() {
                   ? 'text-white'
                   : 'bg-td-card text-td-text-muted'
               }`}
-              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '30', color: STATUS_COLORS[status] } : undefined}
+              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '40', color: STATUS_COLORS[status] } : undefined}
             >
               {TASK_STATUS_LABELS[status]} ({count})
             </button>
@@ -195,7 +195,7 @@ export default function Tasks() {
                 <div className="flex items-center gap-2 mb-4 px-1">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] }} />
                   <h3 className="text-sm font-semibold text-td-text">{TASK_STATUS_LABELS[status]}</h3>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '20', color: STATUS_COLORS[status] }}>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '35', color: STATUS_COLORS[status] }}>
                     {colTasks.length}
                   </span>
                 </div>

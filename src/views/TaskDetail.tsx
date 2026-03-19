@@ -67,10 +67,10 @@ export default function TaskDetail() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '15', color: PRIORITY_COLORS[task.priority] }}>
+              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}>
                 {PRIORITY_LABELS[task.priority]}
               </span>
-              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '15', color: STATUS_COLORS[task.status] }}>
+              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '30', color: STATUS_COLORS[task.status] }}>
                 {TASK_STATUS_LABELS[task.status]}
               </span>
             </div>

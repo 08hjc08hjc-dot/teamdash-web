@@ -66,7 +66,7 @@ export default function ProjectDetail() {
             <span className="text-base font-medium text-td-text-bright">진행률</span>
             <span className="text-lg font-semibold text-teal-400"><AnimatedNumber value={pct} suffix="%" /></span>
           </div>
-          <div className="h-2.5 bg-td-input rounded-full overflow-hidden">
+          <div className="h-2.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden">
             <div className="h-full rounded-full transition-all animate-bar" style={{ width: `${pct}%`, backgroundColor: project.color }} />
           </div>
           <p className="text-sm text-td-text-muted mt-1">{done}/{total} 작업 완료</p>
@@ -90,7 +90,7 @@ export default function ProjectDetail() {
           {(['todo', 'in_progress', 'done'] as const).map((status) => {
             const count = tasks.filter((t) => t.status === status).length;
             return (
-              <span key={status} className="text-sm px-3 py-1 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[status] + '15', color: STATUS_COLORS[status] }}>
+              <span key={status} className="text-sm px-3 py-1 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[status] + '30', color: STATUS_COLORS[status] }}>
                 {TASK_STATUS_LABELS[status]}: {count}
               </span>
             );
@@ -114,15 +114,15 @@ export default function ProjectDetail() {
                   <p className="text-sm font-medium text-td-text truncate hover:text-teal-300 transition-colors">{task.title}</p>
                   <span className="text-sm font-semibold text-teal-400 shrink-0 ml-2">{taskPct}%</span>
                 </div>
-                <div className="h-1.5 bg-td-input rounded-full overflow-hidden mb-3">
+                <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden mb-3">
                   <div className="h-full rounded-full transition-all animate-bar" style={{ width: `${taskPct}%`, backgroundColor: project.color }} />
                 </div>
                 {/* Badges row */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '20', color: STATUS_COLORS[task.status] }}>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '35', color: STATUS_COLORS[task.status] }}>
                     {TASK_STATUS_LABELS[task.status]}
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '20', color: PRIORITY_COLORS[task.priority] }}>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '35', color: PRIORITY_COLORS[task.priority] }}>
                     {PRIORITY_LABELS[task.priority]}
                   </span>
                   {assignee && (

@@ -171,7 +171,7 @@ export default function Settings() {
                     <p className="text-xs text-td-text-muted truncate">{m.email}</p>
                   </div>
                   {isMemberOwner ? (
-                    <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/15 text-teal-400 font-medium">소유자</span>
+                    <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/30 text-teal-700 dark:bg-teal-500/15 dark:text-teal-400 font-medium">소유자</span>
                   ) : (
                     <select
                       value={m.role}

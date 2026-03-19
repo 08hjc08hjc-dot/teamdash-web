@@ -37,8 +37,8 @@ export default function Team() {
                   <div className="min-w-0 flex-1">
                     <h3 className="text-lg font-semibold text-td-text truncate">{member.name}</h3>
                     <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${
-                      member.role === 'owner' ? 'bg-amber-500/15 text-amber-400' :
-                      member.role === 'admin' ? 'bg-teal-500/15 text-teal-400' :
+                      member.role === 'owner' ? 'bg-amber-500/30 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400' :
+                      member.role === 'admin' ? 'bg-teal-500/30 text-teal-700 dark:bg-teal-500/15 dark:text-teal-400' :
                       'bg-td-card text-td-text-muted'
                     }`}>
                       {ROLE_LABELS[member.role]}

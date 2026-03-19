@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, ClipboardCheck, Users, Settings, X, LogOut, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, ClipboardCheck, Users, Lightbulb, Settings, X, LogOut, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useAuthStore, useTeamStore } from '../../store';
 import { Avatar } from '../ui/Avatar';
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { to: '/projects', icon: FolderKanban, label: '프로젝트' },
   { to: '/tasks', icon: ClipboardCheck, label: '작업 보드' },
   { to: '/team', icon: Users, label: '팀' },
+  { to: '/ideas', icon: Lightbulb, label: '아이디어' },
   { to: '/settings', icon: Settings, label: '설정' },
 ];
 

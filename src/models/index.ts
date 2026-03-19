@@ -73,6 +73,18 @@ export interface DashboardWidget {
   visible: boolean;
 }
 
+export type IdeaStatus = 'open' | 'accepted' | 'rejected';
+
+export interface Idea {
+  id: string;
+  title: string;
+  description: string;
+  authorId: string;
+  status: IdeaStatus;
+  votes: string[]; // member IDs who voted
+  createdAt: string;
+}
+
 export interface AppSettings {
   themeMode: 'light' | 'dark' | 'system';
   notificationsEnabled: boolean;

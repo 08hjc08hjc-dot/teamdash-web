@@ -67,6 +67,7 @@ export default function Ideas() {
   const [uploading, setUploading] = useState(false);
   const [uploadingName, setUploadingName] = useState('');
   const [uploadPercent, setUploadPercent] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   const filtered = ideas.filter((idea) => filter === 'all' || idea.status === filter);
   const canManage = isOwner || isAdmin;
@@ -78,8 +79,9 @@ export default function Ideas() {
     setUploading(true);
     setUploadingName(file.name);
     setUploadPercent(0);
+    setUploadStatus('드라이브 권한 확인 중...');
     try {
-      const url = await uploadToGoogleDrive(file, (p) => setUploadPercent(p));
+      const url = await uploadToGoogleDrive(file, (p) => { setUploadPercent(p); setUploadStatus('업로드 중...'); });
       const att: IdeaAttachment = { id: Date.now().toString(), type: 'file', name: file.name, url };
       if (target === 'new') setAttachments((p) => [...p, att]);
       else setEditAttachments((p) => [...p, att]);
@@ -404,7 +406,7 @@ export default function Ideas() {
               </svg>
               <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-teal-400">{uploadPercent}%</span>
             </div>
-            <p className="text-white font-medium mb-1">파일 업로드 중...</p>
+            <p className="text-white font-medium mb-1">{uploadStatus || '준비 중...'}</p>
             <p className="text-sm text-slate-400 truncate mb-3">{uploadingName}</p>
             <button
               onClick={() => cancelUpload()}

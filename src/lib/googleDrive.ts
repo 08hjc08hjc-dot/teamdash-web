@@ -49,11 +49,17 @@ function requestDriveToken(): Promise<string> {
       return;
     }
 
+    const timeout = setTimeout(() => {
+      _rejectFn = null;
+      reject(new Error('드라이브 권한 요청 시간 초과 (30초). 팝업이 차단되었을 수 있습니다. 브라우저에서 팝업을 허용해주세요.'));
+    }, 30000);
+
     try {
       const client = g.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: DRIVE_SCOPE,
         callback: (resp) => {
+          clearTimeout(timeout);
           _rejectFn = null;
           if (_cancelled) { reject(new Error('cancelled')); return; }
           if (resp.error || !resp.access_token) {

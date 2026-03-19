@@ -12,7 +12,10 @@ export type ActivityType =
   | 'milestone_added'
   | 'milestone_toggled'
   | 'task_deleted'
-  | 'project_deleted';
+  | 'project_deleted'
+  | 'idea_created'
+  | 'idea_voted'
+  | 'idea_comment';
 
 export interface TeamMember {
   id: string;
@@ -74,6 +77,21 @@ export interface DashboardWidget {
 }
 
 export type IdeaStatus = 'open' | 'accepted' | 'rejected';
+export type VoteType = 'agree' | 'disagree' | 'neutral';
+
+export interface IdeaAttachment {
+  id: string;
+  type: 'file' | 'link';
+  name: string;
+  url: string;
+}
+
+export interface IdeaComment {
+  id: string;
+  authorId: string;
+  content: string;
+  createdAt: string;
+}
 
 export interface Idea {
   id: string;
@@ -81,7 +99,9 @@ export interface Idea {
   description: string;
   authorId: string;
   status: IdeaStatus;
-  votes: string[]; // member IDs who voted
+  votes: Record<VoteType, string[]>;
+  attachments: IdeaAttachment[];
+  comments: IdeaComment[];
   createdAt: string;
 }
 

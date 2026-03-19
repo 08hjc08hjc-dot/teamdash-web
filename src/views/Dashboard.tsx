@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { FolderKanban, ClipboardList, CheckCircle2, Users, Plus, ArrowRight, UserPlus, MessageSquarePlus, FolderPlus } from 'lucide-react';
+import { FolderKanban, ClipboardList, CheckCircle2, Users, Plus, ArrowRight, UserPlus, MessageSquarePlus, FolderPlus, Lightbulb, Vote, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore, useTeamStore, useProjectStore, useTaskStore, useActivityStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
@@ -23,6 +23,9 @@ const ACTIVITY_ICONS: Record<ActivityType, typeof Plus> = {
   milestone_toggled: CheckCircle2,
   task_deleted: ClipboardList,
   project_deleted: FolderKanban,
+  idea_created: Lightbulb,
+  idea_voted: Vote,
+  idea_comment: MessageCircle,
 };
 const ACTIVITY_LABELS: Record<ActivityType, string> = {
   task_created: '작업 생성',
@@ -35,6 +38,9 @@ const ACTIVITY_LABELS: Record<ActivityType, string> = {
   milestone_toggled: '마일스톤 체크',
   task_deleted: '작업 삭제',
   project_deleted: '프로젝트 삭제',
+  idea_created: '아이디어 건의',
+  idea_voted: '아이디어 투표',
+  idea_comment: '아이디어 댓글',
 };
 
 export default function Dashboard() {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, ArrowRight, CheckCircle2, FolderPlus, UserPlus, MessageSquarePlus, FolderKanban, ClipboardList } from 'lucide-react';
+import { ArrowLeft, Plus, ArrowRight, CheckCircle2, FolderPlus, UserPlus, MessageSquarePlus, FolderKanban, ClipboardList, Lightbulb, Vote, MessageCircle } from 'lucide-react';
 import { useActivityStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { formatRelativeDate } from '../utils/formatters';
@@ -19,6 +19,9 @@ const ACTIVITY_ICONS: Record<ActivityType, typeof Plus> = {
   milestone_toggled: CheckCircle2,
   task_deleted: ClipboardList,
   project_deleted: FolderKanban,
+  idea_created: Lightbulb,
+  idea_voted: Vote,
+  idea_comment: MessageCircle,
 };
 const ACTIVITY_LABELS: Record<ActivityType, string> = {
   task_created: '작업 생성',
@@ -31,6 +34,9 @@ const ACTIVITY_LABELS: Record<ActivityType, string> = {
   milestone_toggled: '마일스톤 체크',
   task_deleted: '작업 삭제',
   project_deleted: '프로젝트 삭제',
+  idea_created: '아이디어 건의',
+  idea_voted: '아이디어 투표',
+  idea_comment: '아이디어 댓글',
 };
 
 const FILTER_OPTIONS: { value: string; label: string }[] = [
@@ -39,6 +45,7 @@ const FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: 'project', label: '프로젝트' },
   { value: 'member', label: '멤버' },
   { value: 'milestone', label: '마일스톤' },
+  { value: 'idea', label: '아이디어' },
 ];
 
 export default function Activities() {
@@ -52,6 +59,7 @@ export default function Activities() {
     if (filter === 'project') return act.type.startsWith('project_');
     if (filter === 'member') return act.type === 'member_added';
     if (filter === 'milestone') return act.type.startsWith('milestone_');
+    if (filter === 'idea') return act.type.startsWith('idea_');
     return true;
   });
 

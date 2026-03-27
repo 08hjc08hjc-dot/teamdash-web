@@ -101,8 +101,8 @@ export default function Projects() {
                   <div className="flex items-start justify-between">
                     <h3 className="text-sm font-semibold text-td-text">{project.title}</h3>
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      project.status === 'active' ? 'bg-green-500/15 text-green-400 animate-glow-active' :
-                      project.status === 'completed' ? 'bg-blue-500/15 text-blue-400' :
+                      project.status === 'active' ? 'bg-green-600 text-white animate-glow-active' :
+                      project.status === 'completed' ? 'bg-blue-600 text-white' :
                       'bg-td-card text-td-text-muted'
                     }`}>
                       {PROJECT_STATUS_LABELS[project.status]}

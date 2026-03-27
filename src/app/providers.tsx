@@ -32,23 +32,21 @@ function AnimatedBackground() {
   const themeMode = useSettingsStore((s) => s.themeMode);
 
   useEffect(() => {
+    if (themeMode === 'light') return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     let gradient: any;
     let cancelled = false;
 
-    const colors = themeMode === 'dark'
-      ? ['#061a20', '#08232b', '#041518', '#020d11']
-      : ['#c7c7c7', '#bfbfbf', '#c3c3c3', '#b8b8b8'];
-
     (async () => {
       const { WaveGradient } = await import('wave-gradient');
       if (cancelled) return;
       gradient = new WaveGradient(canvas, {
-        colors,
-        speed: themeMode === 'dark' ? 1.0 : 0.6,
-        amplitude: themeMode === 'dark' ? 320 : 200,
+        colors: ['#061a20', '#08232b', '#041518', '#020d11'],
+        speed: 1.0,
+        amplitude: 320,
         fps: 30,
         seed: 5,
       });
@@ -60,11 +58,12 @@ function AnimatedBackground() {
     };
   }, [themeMode]);
 
+  if (themeMode === 'light') return null;
+
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 w-full h-full pointer-events-none z-0"
-      style={themeMode === 'light' ? { filter: 'grayscale(1)' } : undefined}
     />
   );
 }

@@ -88,18 +88,18 @@ export default function TaskDetail() {
                   value={task.priority}
                   onChange={(e) => updateTask(task.id, { priority: e.target.value as Priority })}
                   className="text-sm px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 appearance-none text-center"
-                  style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '70', color: PRIORITY_COLORS[task.priority] }}
+                  style={{ backgroundColor: PRIORITY_COLORS[task.priority], color: '#fff' }}
                 >
                   {(Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(([val, label]) => (
                     <option key={val} value={val} style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}>{label}</option>
                   ))}
                 </select>
               ) : (
-                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '70', color: PRIORITY_COLORS[task.priority] }}>
+                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority], color: '#fff' }}>
                   {PRIORITY_LABELS[task.priority]}
                 </span>
               )}
-              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '70', color: STATUS_COLORS[task.status] }}>
+              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status], color: '#fff' }}>
                 {TASK_STATUS_LABELS[task.status]}
               </span>
             </div>

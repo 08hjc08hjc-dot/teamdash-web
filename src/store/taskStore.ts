@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { loadFromStorage, saveToStorage } from './storage';
 import { useActivityStore } from './activityStore';
+import { useProjectStore } from './projectStore';
 import { useSettingsStore } from './settingsStore';
 import { TASK_STATUS_LABELS } from '../constants';
 import type { Task, TaskStatus, Priority, Milestone } from '../models';
@@ -73,6 +74,20 @@ export const useTaskStore = create<TaskStore>()((set, get) => ({
           targetTitle: task.title,
           metadata: { from: TASK_STATUS_LABELS[oldStatus!] ?? oldStatus!, to: TASK_STATUS_LABELS[newStatus] ?? newStatus },
         });
+      }
+    }
+    // Auto-update project status based on task completion
+    if (task) {
+      const tasks = get().tasks;
+      const projectTasks = tasks.filter((t) => t.projectId === task.projectId);
+      const allDone = projectTasks.length > 0 && projectTasks.every((t) => t.status === 'done');
+      const project = useProjectStore.getState().projects.find((p) => p.id === task.projectId);
+      if (project) {
+        if (allDone && project.status === 'active') {
+          useProjectStore.getState().updateProject(task.projectId, { status: 'completed' });
+        } else if (!allDone && project.status === 'completed') {
+          useProjectStore.getState().updateProject(task.projectId, { status: 'active' });
+        }
       }
     }
   },

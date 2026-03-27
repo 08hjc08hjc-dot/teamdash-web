@@ -80,7 +80,7 @@ export default function Dashboard() {
         <h2 className="text-2xl font-bold text-td-text">
           안녕하세요, {authUser?.name.split(' ')[0] ?? '사용자'}님
         </h2>
-        <p className="text-xs text-td-text-muted mt-1">{format(new Date(), 'M월 d일 EEEE', { locale: ko })}</p>
+        <p className="text-sm text-td-text-secondary mt-1">{format(new Date(), 'M월 d일 EEEE', { locale: ko })}</p>
       </div>
 
       {/* Stats */}
@@ -89,7 +89,7 @@ export default function Dashboard() {
           <Link
             key={title}
             href={to}
-            className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong hover:border-td-border-strong transition-all"
+            className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong hover:border-td-border-strong transition-all shadow-sm"
           >
             <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: color + '35' }}>
               <Icon size={18} style={{ color }} className="md:!w-5 md:!h-5" />
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* My Tasks */}
-        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0">
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0 shadow-sm">
           <h3 className="text-sm md:text-base font-semibold text-td-text mb-3">내 작업</h3>
           {myTasks.length === 0 && <p className="text-xs text-td-text-muted">배정된 작업이 없습니다</p>}
           <div className="space-y-2 lg:max-h-[400px] lg:overflow-y-auto lg:scroll-section lg:pr-1">
@@ -110,7 +110,7 @@ export default function Dashboard() {
               const proj = projects.find((p) => p.id === task.projectId);
               const msPct = getTaskProgress(task);
               return (
-                <Link href={`/tasks/${task.id}`} key={task.id} className="block p-3 border border-td-border rounded-xl hover:bg-td-hover transition-all">
+                <Link href={`/tasks/${task.id}`} key={task.id} className="block p-3 border border-td-border rounded-xl hover:bg-td-hover transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority], color: PRIORITY_COLORS[task.priority] }} />
@@ -137,7 +137,7 @@ export default function Dashboard() {
         </div>
 
         {/* Project Progress */}
-        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0">
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0 shadow-sm">
           <h3 className="text-sm md:text-base font-semibold text-td-text mb-3">프로젝트 진행률</h3>
           {activeProjects.length === 0 && <p className="text-xs text-td-text-muted">진행 중인 프로젝트가 없습니다</p>}
           <div className="space-y-3 lg:max-h-[400px] lg:overflow-y-auto lg:scroll-section lg:pr-1">
@@ -145,7 +145,7 @@ export default function Dashboard() {
               const pTasks = tasks.filter((t) => t.projectId === project.id);
               const { pct, done, total } = getProjectProgress(pTasks);
               return (
-                <Link href={`/projects/${project.id}`} key={project.id} className="block p-3 border border-td-border rounded-xl hover:bg-td-hover transition-all">
+                <Link href={`/projects/${project.id}`} key={project.id} className="block p-3 border border-td-border rounded-xl hover:bg-td-hover transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: project.color }} />
@@ -164,7 +164,7 @@ export default function Dashboard() {
         </div>
 
         {/* Team Overview */}
-        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0">
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0 shadow-sm">
           <h3 className="text-sm md:text-base font-semibold text-td-text mb-3">팀원</h3>
           {members.length === 0 && <p className="text-xs text-td-text-muted">팀원이 없습니다</p>}
           <div className="flex gap-4 overflow-x-auto pb-2 snap-x md:grid md:grid-cols-4 lg:grid-cols-5 md:overflow-x-visible md:overflow-y-auto md:snap-none md:pb-0 lg:max-h-[400px] lg:scroll-section lg:pr-1">
@@ -182,7 +182,7 @@ export default function Dashboard() {
         </div>
 
         {/* Activity Feed */}
-        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0">
+        <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong transition-all min-w-0 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm md:text-base font-semibold text-td-text">최근 활동</h3>
             <Link href="/activities" className="text-xs text-teal-400 hover:text-teal-300 transition-colors">전체보기</Link>

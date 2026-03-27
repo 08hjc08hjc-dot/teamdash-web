@@ -29,7 +29,10 @@ export default function NewTask() {
   const [assigneeIds, setAssigneeIds] = useState<string[]>(canAssignOthers ? [] : (myMember ? [myMember.id] : []));
   const [startDate, setStartDate] = useState('');
 
-  useEffect(() => { setStartDate(new Date().toISOString().slice(0, 10)); }, []);
+  useEffect(() => {
+    const d = new Date();
+    setStartDate(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+  }, []);
   const [dueDate, setDueDate] = useState('');
 
   const toggleAssignee = (id: string) => {

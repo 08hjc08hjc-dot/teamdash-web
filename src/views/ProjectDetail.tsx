@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Trash2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Trash2, Pencil } from 'lucide-react';
 import { useProjectStore, useTaskStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
@@ -19,6 +19,7 @@ export default function ProjectDetail() {
   const router = useRouter();
   const project = useProjectStore((s) => s.projects.find((p) => p.id === id));
   const removeProject = useProjectStore((s) => s.removeProject);
+  const updateProject = useProjectStore((s) => s.updateProject);
   const allTasks = useTaskStore((s) => s.tasks);
   const tasks = allTasks.filter((t) => t.projectId === id).sort((a, b) => a.order - b.order);
   const allMembers = useTeamStore((s) => s.members);
@@ -26,6 +27,10 @@ export default function ProjectDetail() {
   const moveTask = useTaskStore((s) => s.moveTask);
   const { isAdmin, isOwner } = usePermissions();
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [editingDesc, setEditingDesc] = useState(false);
+  const [titleVal, setTitleVal] = useState('');
+  const [descVal, setDescVal] = useState('');
   const canDelete = isAdmin || isOwner;
 
   if (!project) {
@@ -48,7 +53,25 @@ export default function ProjectDetail() {
       <div className="h-1.5 rounded-t-2xl" style={{ backgroundColor: project.color }} />
       <div className="bg-td-card backdrop-blur-xl rounded-b-2xl border border-t-0 border-td-border p-4 sm:p-6 mb-6">
         <div className="flex items-start justify-between">
-          <h2 className="text-xl sm:text-2xl font-bold text-td-text">{project.title}</h2>
+          <div className="flex-1 min-w-0">
+            {editingTitle ? (
+              <input
+                autoFocus
+                value={titleVal}
+                onChange={(e) => setTitleVal(e.target.value)}
+                onBlur={() => { if (titleVal.trim()) updateProject(project.id, { title: titleVal.trim() }); setEditingTitle(false); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') { if (titleVal.trim()) updateProject(project.id, { title: titleVal.trim() }); setEditingTitle(false); } if (e.key === 'Escape') setEditingTitle(false); }}
+                className="w-full text-xl sm:text-2xl font-bold text-td-text bg-transparent border-b-2 border-teal-500 focus:outline-none"
+              />
+            ) : (
+              <h2
+                onClick={() => { setTitleVal(project.title); setEditingTitle(true); }}
+                className="text-xl sm:text-2xl font-bold text-td-text cursor-pointer hover:text-teal-300 transition-colors group"
+              >
+                {project.title} <Pencil size={14} className="inline ml-1 text-td-text-faint opacity-0 group-hover:opacity-100 transition-opacity" />
+              </h2>
+            )}
+          </div>
           {canDelete && (
             <button
               onClick={() => setDeleteDialog(true)}
@@ -58,7 +81,24 @@ export default function ProjectDetail() {
             </button>
           )}
         </div>
-        <p className="text-base text-td-text-muted mt-2">{project.description}</p>
+        {editingDesc ? (
+          <textarea
+            autoFocus
+            value={descVal}
+            onChange={(e) => setDescVal(e.target.value)}
+            onBlur={() => { updateProject(project.id, { description: descVal }); setEditingDesc(false); }}
+            onKeyDown={(e) => { if (e.key === 'Escape') setEditingDesc(false); }}
+            rows={3}
+            className="w-full mt-2 text-base text-td-text-muted bg-transparent border border-td-border rounded-xl p-3 focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none"
+          />
+        ) : (
+          <p
+            onClick={() => { setDescVal(project.description); setEditingDesc(true); }}
+            className="text-base text-td-text-muted mt-2 cursor-pointer hover:text-td-text transition-colors group min-h-[24px]"
+          >
+            {project.description || '설명을 추가하세요...'} <Pencil size={12} className="inline ml-1 text-td-text-faint opacity-0 group-hover:opacity-100 transition-opacity" />
+          </p>
+        )}
 
         {/* Progress */}
         <div className="mt-5">

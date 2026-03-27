@@ -113,7 +113,7 @@ export default function Tasks() {
   const columns: TaskStatus[] = ['todo', 'in_progress', 'done'];
 
   return (
-    <div className="lg:h-full lg:flex lg:flex-col">
+    <div className="lg:h-full lg:flex lg:flex-col overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h2 className="text-2xl font-bold text-td-text">작업 보드</h2>
         <Link
@@ -125,7 +125,7 @@ export default function Tasks() {
       </div>
 
       {/* Project filter */}
-      <div className="flex gap-2 md:gap-2.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
+      <div className="flex gap-2 md:gap-2.5 mb-4 overflow-x-auto scrollbar-hide pb-1 max-w-full">
         <button
           onClick={() => setProjectFilter(undefined)}
           className={`shrink-0 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${

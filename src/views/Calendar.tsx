@@ -85,7 +85,7 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
   const lanes: { col: number; end: number }[][] = [];
 
   for (const task of hits) {
-    const s = strip(new Date(task.createdAt));
+    const s = strip(new Date(task.startDate ?? task.createdAt));
     const e = task.dueDate ? strip(new Date(task.dueDate)) : s;
     const [lo, hi] = s <= e ? [s, e] : [e, s];
 

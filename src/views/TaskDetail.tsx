@@ -155,10 +155,10 @@ export default function TaskDetail() {
               <select
                 value={task.projectId}
                 onChange={(e) => updateTask(task.id, { projectId: e.target.value })}
-                className="text-base font-medium text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+                className="text-base font-medium text-td-text bg-td-card border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
               >
                 {activeProjects.map((p) => (
-                  <option key={p.id} value={p.id}>{p.title}</option>
+                  <option key={p.id} value={p.id} className="bg-td-card text-td-text">{p.title}</option>
                 ))}
               </select>
             ) : project ? (

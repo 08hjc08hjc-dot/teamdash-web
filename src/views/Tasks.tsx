@@ -14,12 +14,13 @@ import type { Task, TaskStatus } from '../models';
 
 function TaskCard({ task }: { task: Task }) {
   const router = useRouter();
-  const assignee = useTeamStore((s) => s.members.find((m) => m.id === task.assigneeId));
+  const allMembers = useTeamStore((s) => s.members);
+  const assignees = allMembers.filter((m) => (task.assigneeIds ?? []).includes(m.id));
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task.projectId));
   const moveTask = useTaskStore((s) => s.moveTask);
   const { isAdmin, member: myMember } = usePermissions();
 
-  const isAssignee = myMember?.id === task.assigneeId;
+  const isAssignee = (task.assigneeIds ?? []).includes(myMember?.id ?? '');
   const canChangeStatus = isAdmin || isAssignee;
 
   const milestones = task.milestones ?? [];
@@ -59,10 +60,16 @@ function TaskCard({ task }: { task: Task }) {
         </div>
 
         <div className="flex items-center justify-between mt-3">
-          {assignee ? (
+          {assignees.length > 0 ? (
             <div className="flex items-center gap-1.5">
-              <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={22} />
-              <span className="text-xs text-td-text-secondary">{assignee.name}</span>
+              <div className="flex -space-x-1.5">
+                {assignees.slice(0, 3).map((a) => (
+                  <Avatar key={a.id} name={a.name} color={a.avatarColor} avatarUrl={a.avatarUrl} size={22} />
+                ))}
+              </div>
+              <span className="text-xs text-td-text-secondary">
+                {assignees.length <= 2 ? assignees.map((a) => a.name).join(', ') : `${assignees[0].name} 외 ${assignees.length - 1}명`}
+              </span>
             </div>
           ) : <div />}
           <div className="flex items-center gap-1.5 text-td-text-muted">

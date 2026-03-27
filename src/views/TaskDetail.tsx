@@ -20,7 +20,7 @@ export default function TaskDetail() {
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task?.projectId));
   const activeProjects = useProjectStore((s) => s.projects.filter((p) => p.status !== 'archived'));
   const allMembers = useTeamStore((s) => s.members);
-  const assignee = allMembers.find((m) => m.id === task?.assigneeId);
+  const assignees = allMembers.filter((m) => (task?.assigneeIds ?? []).includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);
   const updateTask = useTaskStore((s) => s.updateTask);
   const removeTask = useTaskStore((s) => s.removeTask);
@@ -168,24 +168,43 @@ export default function TaskDetail() {
             ) : null}
           </div>
 
-          {/* Assignee */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-td-text-muted w-16 shrink-0">담당자</span>
+          {/* Assignees */}
+          <div className="flex items-start gap-3">
+            <span className="text-sm text-td-text-muted w-16 shrink-0 pt-1">담당자</span>
             {editing ? (
-              <select
-                value={task.assigneeId ?? ''}
-                onChange={(e) => updateTask(task.id, { assigneeId: e.target.value || null })}
-                className="text-base text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
-              >
-                <option value="">미배정</option>
-                {allMembers.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
+              <div className="flex gap-2 flex-wrap">
+                {allMembers.map((m) => {
+                  const selected = (task.assigneeIds ?? []).includes(m.id);
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => {
+                        const current = task.assigneeIds ?? [];
+                        const next = selected ? current.filter((x) => x !== m.id) : [...current, m.id];
+                        updateTask(task.id, { assigneeIds: next });
+                      }}
+                      className={`flex items-center gap-1.5 px-2.5 py-1 text-sm font-medium rounded-lg transition-all ${
+                        selected
+                          ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
+                          : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
+                      }`}
+                    >
+                      <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={16} />
+                      {m.name}
+                      {selected && <Check size={14} />}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : assignees.length > 0 ? (
+              <div className="flex items-center gap-2 flex-wrap">
+                {assignees.map((a) => (
+                  <div key={a.id} className="flex items-center gap-1.5">
+                    <Avatar name={a.name} color={a.avatarColor} avatarUrl={a.avatarUrl} size={20} />
+                    <span className="text-base text-td-text">{a.name}</span>
+                  </div>
                 ))}
-              </select>
-            ) : assignee ? (
-              <div className="flex items-center gap-1.5">
-                <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={20} />
-                <span className="text-base text-td-text">{assignee.name}</span>
               </div>
             ) : (
               <span className="text-base text-td-text-faint">미배정</span>

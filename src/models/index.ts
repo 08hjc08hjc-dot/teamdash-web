@@ -51,7 +51,7 @@ export interface Task {
   status: TaskStatus;
   priority: Priority;
   projectId: string;
-  assigneeId: string | null;
+  assigneeIds: string[];
   dueDate: string | null;
   milestones?: Milestone[];
   order: number;

@@ -39,7 +39,7 @@ function TaskCard({ task }: { task: Task }) {
           <div className="min-w-0">
             <p className="text-sm font-semibold text-td-text hover:text-teal-300 transition-colors leading-snug">{task.title}</p>
           </div>
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '50', color: PRIORITY_COLORS[task.priority] }}>
+          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '70', color: PRIORITY_COLORS[task.priority] }}>
             {PRIORITY_LABELS[task.priority]}
           </span>
         </div>
@@ -117,7 +117,7 @@ function TaskCard({ task }: { task: Task }) {
                     ? 'text-white cursor-default'
                     : 'bg-td-card hover:bg-td-hover text-td-text-muted hover:text-td-text-bright'
                 }`}
-                style={task.status === s ? { backgroundColor: STATUS_COLORS[s] + '50', color: STATUS_COLORS[s] } : undefined}
+                style={task.status === s ? { backgroundColor: STATUS_COLORS[s] + '70', color: STATUS_COLORS[s] } : undefined}
               >
                 {TASK_STATUS_LABELS[s]}
               </button>
@@ -163,7 +163,7 @@ export default function Tasks() {
           onClick={() => setProjectFilter(undefined)}
           className={`shrink-0 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
             !projectFilter
-              ? 'bg-teal-500/30 text-teal-700 border border-teal-600/30 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
+              ? 'bg-teal-600 text-white border border-teal-700 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
               : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
           }`}
         >
@@ -208,7 +208,7 @@ export default function Tasks() {
                   ? 'text-white'
                   : 'bg-td-card text-td-text-muted'
               }`}
-              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '55', color: STATUS_COLORS[status] } : undefined}
+              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '75', color: STATUS_COLORS[status] } : undefined}
             >
               {TASK_STATUS_LABELS[status]} ({count})
             </button>
@@ -228,7 +228,7 @@ export default function Tasks() {
                 <div className="flex items-center gap-2 mb-4 px-1">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] }} />
                   <h3 className="text-sm font-semibold text-td-text">{TASK_STATUS_LABELS[status]}</h3>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '55', color: STATUS_COLORS[status] }}>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '75', color: STATUS_COLORS[status] }}>
                     {colTasks.length}
                   </span>
                 </div>

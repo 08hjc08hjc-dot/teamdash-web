@@ -4,8 +4,8 @@
 
 /* ─── Theme Variables ─── */
 :root {
-  --td-bg: #f1f5f9;
-  --td-bg-soft: rgba(241,245,249,0.9);
+  --td-bg: #C7C7C7;
+  --td-bg-soft: rgba(199,199,199,0.95);
   --td-card: rgba(255,255,255,0.92);
   --td-card-hover: rgba(255,255,255,0.97);
   --td-surface: rgba(241,245,249,0.85);

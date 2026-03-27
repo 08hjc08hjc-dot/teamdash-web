@@ -66,7 +66,7 @@ export default function Projects() {
             onClick={() => setFilter(f.value)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
               filter === f.value
-                ? 'bg-teal-500/30 text-teal-700 border border-teal-600/30 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
+                ? 'bg-teal-600 text-white border border-teal-700 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
                 : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
             }`}
           >

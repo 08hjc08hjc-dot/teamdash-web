@@ -305,7 +305,7 @@ export default function Calendar() {
                       <p className="text-sm font-medium text-td-text truncate">{task.title}</p>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                         <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium"
-                          style={{ backgroundColor: STATUS_COLORS[task.status] + '50', color: STATUS_COLORS[task.status] }}
+                          style={{ backgroundColor: STATUS_COLORS[task.status] + '70', color: STATUS_COLORS[task.status] }}
                         >{TASK_STATUS_LABELS[task.status]}</span>
                         <span className="text-[11px] text-td-text-faint">
                           {created.getMonth() + 1}/{created.getDate()} ~ {dueDate.getMonth() + 1}/{dueDate.getDate()}

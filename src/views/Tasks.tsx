@@ -125,10 +125,10 @@ export default function Tasks() {
       </div>
 
       {/* Project filter */}
-      <div className="flex gap-2 md:gap-2.5 flex-wrap mb-4">
+      <div className="flex gap-2 md:gap-2.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
         <button
           onClick={() => setProjectFilter(undefined)}
-          className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all ${
+          className={`shrink-0 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
             !projectFilter
               ? 'bg-teal-500/30 text-teal-700 border border-teal-600/30 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
               : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
@@ -140,7 +140,7 @@ export default function Tasks() {
           <button
             key={p.id}
             onClick={() => setProjectFilter(projectFilter === p.id ? undefined : p.id)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+            className={`shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
               projectFilter === p.id ? 'text-white' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
             }`}
             style={projectFilter === p.id ? { backgroundColor: p.color + 'cc' } : undefined}

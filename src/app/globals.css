@@ -158,6 +158,15 @@ body {
   background: var(--td-scrollbar-hover);
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Progress bar entrance animation */
 @keyframes grow-width {
   from { width: 0%; }

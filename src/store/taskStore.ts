@@ -103,14 +103,25 @@ export const useTaskStore = create<TaskStore>()((set, get) => ({
       return idx >= 0 ? { ...t, order: idx } : t;
     }),
   })),
-  setTasks: (tasks) => set({
-    tasks: tasks.map((t: any) => {
+  setTasks: (tasks) => {
+    let needsMigration = false;
+    const migrated = tasks.map((t: any) => {
       if (Array.isArray(t.assigneeIds)) return t;
+      needsMigration = true;
       const ids = t.assigneeId ? [t.assigneeId] : [];
       const { assigneeId: _, ...rest } = t;
       return { ...rest, assigneeIds: ids };
-    }),
-  }),
+    });
+    const result = needsMigration ? migrated : tasks;
+    // Skip update if data is unchanged to prevent re-render loops
+    const current = get().tasks;
+    if (
+      !needsMigration &&
+      current.length === result.length &&
+      current.every((t, i) => t.id === result[i]?.id && t.updatedAt === result[i]?.updatedAt)
+    ) return;
+    set({ tasks: result });
+  },
   addMilestone: (taskId, title) => {
     const task = get().tasks.find((t) => t.id === taskId);
     set((s) => ({

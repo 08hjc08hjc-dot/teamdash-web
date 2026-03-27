@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Calendar } from 'lucide-react';
 import { useTaskStore, useProjectStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { PRIORITY_COLORS, STATUS_COLORS } from '../theme';
@@ -18,6 +18,7 @@ function TaskCard({ task }: { task: Task }) {
   const assignees = allMembers.filter((m) => (task.assigneeIds ?? []).includes(m.id));
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task.projectId));
   const moveTask = useTaskStore((s) => s.moveTask);
+  const updateTask = useTaskStore((s) => s.updateTask);
   const { isAdmin, member: myMember } = usePermissions();
 
   const isAssignee = (task.assigneeIds ?? []).includes(myMember?.id ?? '');
@@ -72,9 +73,34 @@ function TaskCard({ task }: { task: Task }) {
               </span>
             </div>
           ) : <div />}
-          <div className="flex items-center gap-2 text-td-text-muted">
-            <span className="text-xs">작성 {formatDate(task.createdAt)}</span>
-            {task.dueDate && <span className="text-xs">· 마감 {formatDate(task.dueDate)}</span>}
+          <div className="flex flex-col items-end gap-0.5 text-td-text-muted">
+            <span
+              className="text-xs flex items-center gap-1 cursor-pointer hover:text-teal-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                const input = document.createElement('input');
+                input.type = 'date';
+                input.value = (task.startDate ?? task.createdAt).slice(0, 10);
+                input.style.position = 'fixed';
+                input.style.opacity = '0';
+                document.body.appendChild(input);
+                input.addEventListener('change', () => {
+                  if (input.value) updateTask(task.id, { startDate: input.value });
+                  document.body.removeChild(input);
+                });
+                input.addEventListener('blur', () => {
+                  if (document.body.contains(input)) document.body.removeChild(input);
+                });
+                input.showPicker();
+              }}
+            >
+              <Calendar size={10} />시작 {formatDate(task.startDate ?? task.createdAt)}
+            </span>
+            {task.dueDate && (
+              <span className="text-xs flex items-center gap-1">
+                <Calendar size={10} />마감 {formatDate(task.dueDate)}
+              </span>
+            )}
           </div>
         </div>
 

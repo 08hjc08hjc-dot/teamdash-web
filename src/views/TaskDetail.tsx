@@ -212,6 +212,21 @@ export default function TaskDetail() {
             )}
           </div>
 
+          {/* Start date */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-td-text-muted w-16 shrink-0">시작일</span>
+            {editing ? (
+              <input
+                type="date"
+                value={(task.startDate ?? task.createdAt).slice(0, 10)}
+                onChange={(e) => updateTask(task.id, { startDate: e.target.value || null })}
+                className="text-base text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+              />
+            ) : (
+              <span className="text-base text-td-text-bright">{formatDate(task.startDate ?? task.createdAt)}</span>
+            )}
+          </div>
+
           {/* Due date */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-td-text-muted w-16 shrink-0">마감일</span>

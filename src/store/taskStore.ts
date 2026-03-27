@@ -16,6 +16,7 @@ interface TaskStore {
     priority: Priority;
     projectId: string;
     assigneeIds: string[];
+    startDate: string | null;
     dueDate: string | null;
   }) => Task;
   updateTask: (id: string, updates: Partial<Task>) => void;
@@ -32,10 +33,14 @@ const KEY = 'teamdash-tasks';
 
 export const useTaskStore = create<TaskStore>()((set, get) => ({
   tasks: loadFromStorage<Task[]>(KEY, 'tasks', []).map((t: any) => {
-    if (Array.isArray(t.assigneeIds)) return t;
-    const ids = t.assigneeId ? [t.assigneeId] : [];
-    const { assigneeId: _, ...rest } = t;
-    return { ...rest, assigneeIds: ids };
+    let task = t;
+    if (!Array.isArray(task.assigneeIds)) {
+      const ids = task.assigneeId ? [task.assigneeId] : [];
+      const { assigneeId: _, ...rest } = task;
+      task = { ...rest, assigneeIds: ids };
+    }
+    if (task.startDate === undefined) task = { ...task, startDate: task.createdAt };
+    return task;
   }),
   addTask: (params) => {
     const now = new Date().toISOString();
@@ -106,14 +111,22 @@ export const useTaskStore = create<TaskStore>()((set, get) => ({
   setTasks: (tasks) => {
     let needsMigration = false;
     const migrated = tasks.map((t: any) => {
-      if (Array.isArray(t.assigneeIds)) return t;
-      needsMigration = true;
-      const ids = t.assigneeId ? [t.assigneeId] : [];
-      const { assigneeId: _, ...rest } = t;
-      return { ...rest, assigneeIds: ids };
+      let changed = false;
+      let task = t;
+      if (!Array.isArray(t.assigneeIds)) {
+        changed = true;
+        const ids = t.assigneeId ? [t.assigneeId] : [];
+        const { assigneeId: _, ...rest } = task;
+        task = { ...rest, assigneeIds: ids };
+      }
+      if (task.startDate === undefined) {
+        changed = true;
+        task = { ...task, startDate: task.createdAt };
+      }
+      if (changed) needsMigration = true;
+      return changed ? task : t;
     });
     const result = needsMigration ? migrated : tasks;
-    // Skip update if data is unchanged to prevent re-render loops
     const current = get().tasks;
     if (
       !needsMigration &&

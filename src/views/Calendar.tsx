@@ -65,7 +65,7 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
 
   // Filter tasks that overlap this week
   const hits = tasks.filter((t) => {
-    const s = strip(new Date(t.createdAt));
+    const s = strip(new Date(t.startDate ?? t.createdAt));
     const e = t.dueDate ? strip(new Date(t.dueDate)) : s;
     const [lo, hi] = s <= e ? [s, e] : [e, s];
     return lo <= we && hi >= ws;
@@ -73,8 +73,8 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
 
   // Sort: earlier start → longer duration → alphabetical
   hits.sort((a, b) => {
-    const as_ = new Date(a.createdAt).getTime();
-    const bs_ = new Date(b.createdAt).getTime();
+    const as_ = new Date(a.startDate ?? a.createdAt).getTime();
+    const bs_ = new Date(b.startDate ?? b.createdAt).getTime();
     if (as_ !== bs_) return as_ - bs_;
     const ae = a.dueDate ? new Date(a.dueDate).getTime() : as_;
     const be = b.dueDate ? new Date(b.dueDate).getTime() : bs_;
@@ -202,55 +202,65 @@ export default function Calendar() {
 
           return (
             <div key={wi} className="border-b border-td-border last:border-b-0">
-              {/* Day numbers row */}
               <div className="grid grid-cols-7">
                 {week.map((date, di) => {
                   const cur = date.getMonth() === month;
                   const isToday = same(date, today);
                   const dow = date.getDay();
                   return (
-                    <div key={di} className={`px-1 sm:px-1.5 pt-1 border-r border-td-border/50 last:border-r-0 ${!cur ? 'bg-td-bg-soft/50' : ''} ${isToday ? 'bg-teal-500/5' : ''}`}>
-                      <span className={`text-xs font-medium w-5 h-5 inline-flex items-center justify-center rounded-full ${
-                        isToday ? 'bg-teal-500 text-white'
-                          : !cur ? 'text-td-text-faint'
-                            : dow === 0 ? 'text-red-400'
-                              : dow === 6 ? 'text-blue-400'
-                                : 'text-td-text-secondary'
-                      }`}>
-                        {date.getDate()}
-                      </span>
+                    <div key={di} className={`border-r border-td-border/50 last:border-r-0 ${!cur ? 'bg-td-bg-soft/50' : ''} ${isToday ? 'bg-teal-500/5' : ''}`}>
+                      {/* Day number */}
+                      <div className="px-1 sm:px-1.5 pt-1">
+                        <span className={`text-xs font-medium w-5 h-5 inline-flex items-center justify-center rounded-full ${
+                          isToday ? 'bg-teal-500 text-white'
+                            : !cur ? 'text-td-text-faint'
+                              : dow === 0 ? 'text-red-400'
+                                : dow === 6 ? 'text-blue-400'
+                                  : 'text-td-text-secondary'
+                        }`}>
+                          {date.getDate()}
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Task bars */}
+              {/* Task bars — overlaid with column guides */}
               {laneCount > 0 ? (
-                <div
-                  className="grid grid-cols-7 gap-y-[3px] px-[2px] pb-1.5 pt-0.5"
-                  style={{ gridTemplateRows: `repeat(${laneCount}, 20px)` }}
-                >
-                  {bars.map((bar) => {
-                    const isDone = bar.task.status === 'done';
-                    return (
-                      <Link
-                        key={`${bar.task.id}-w${wi}`}
-                        href={`/tasks/${bar.task.id}`}
-                        title={`${bar.task.title}\n${new Date(bar.task.createdAt).toLocaleDateString('ko')} → ${bar.task.dueDate ? new Date(bar.task.dueDate).toLocaleDateString('ko') : '마감일 없음'}\n${TASK_STATUS_LABELS[bar.task.status]}`}
-                        className={`truncate text-[10px] sm:text-[11px] font-medium px-1.5 leading-[20px] hover:brightness-125 transition-all ${isDone ? 'opacity-50 line-through' : ''}`}
-                        style={{
-                          gridColumn: `${bar.col + 1} / span ${bar.span}`,
-                          gridRow: bar.lane + 1,
-                          backgroundColor: bar.color + '28',
-                          color: bar.color,
-                          borderRadius: `${bar.isHead ? '4px' : '0'} ${bar.isTail ? '4px' : '0'} ${bar.isTail ? '4px' : '0'} ${bar.isHead ? '4px' : '0'}`,
-                          borderLeft: bar.isHead ? `3px solid ${bar.color}` : 'none',
-                        }}
-                      >
-                        {bar.isHead ? bar.task.title : ''}
-                      </Link>
-                    );
-                  })}
+                <div className="relative">
+                  {/* Column divider lines */}
+                  <div className="absolute inset-0 grid grid-cols-7 pointer-events-none" aria-hidden="true">
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <div key={i} className="border-r border-td-border/50 last:border-r-0" />
+                    ))}
+                  </div>
+                  <div
+                    className="relative grid grid-cols-7 gap-y-[3px] px-[2px] pb-1.5 pt-0.5"
+                    style={{ gridTemplateRows: `repeat(${laneCount}, 20px)` }}
+                  >
+                    {bars.map((bar) => {
+                      const isDone = bar.task.status === 'done';
+                      return (
+                        <Link
+                          key={`${bar.task.id}-w${wi}`}
+                          href={`/tasks/${bar.task.id}`}
+                          title={`${bar.task.title}\n${new Date(bar.task.startDate ?? bar.task.createdAt).toLocaleDateString('ko')} → ${bar.task.dueDate ? new Date(bar.task.dueDate).toLocaleDateString('ko') : '마감일 없음'}\n${TASK_STATUS_LABELS[bar.task.status]}`}
+                          className={`truncate text-[10px] sm:text-[11px] font-medium px-1.5 leading-[20px] hover:brightness-125 transition-all ${isDone ? 'opacity-50 line-through' : ''}`}
+                          style={{
+                            gridColumn: `${bar.col + 1} / span ${bar.span}`,
+                            gridRow: bar.lane + 1,
+                            backgroundColor: bar.color + '28',
+                            color: bar.color,
+                            borderRadius: `${bar.isHead ? '4px' : '0'} ${bar.isTail ? '4px' : '0'} ${bar.isTail ? '4px' : '0'} ${bar.isHead ? '4px' : '0'}`,
+                            borderLeft: bar.isHead ? `3px solid ${bar.color}` : 'none',
+                          }}
+                        >
+                          {bar.isHead ? bar.task.title : ''}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : (
                 <div className="h-2" />
@@ -272,7 +282,7 @@ export default function Calendar() {
               .map((task) => {
                 const project = projects.find((p) => p.id === task.projectId);
                 const dueDate = new Date(task.dueDate!);
-                const created = new Date(task.createdAt);
+                const created = new Date(task.startDate ?? task.createdAt);
                 const isOverdue = task.status !== 'done' && dueDate < today;
 
                 return (

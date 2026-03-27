@@ -27,6 +27,8 @@ export default function NewTask() {
   const [priority, setPriority] = useState<Priority>('medium');
   const [projectId, setProjectId] = useState(projects[0]?.id ?? '');
   const [assigneeIds, setAssigneeIds] = useState<string[]>(canAssignOthers ? [] : (myMember ? [myMember.id] : []));
+  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [dueDate, setDueDate] = useState('');
 
   const toggleAssignee = (id: string) => {
     setAssigneeIds((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
@@ -35,7 +37,7 @@ export default function NewTask() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !projectId) return;
-    addTask({ title: title.trim(), description: description.trim(), status, priority, projectId, assigneeIds, dueDate: null });
+    addTask({ title: title.trim(), description: description.trim(), status, priority, projectId, assigneeIds, startDate: startDate || null, dueDate: dueDate || null });
     router.push('/tasks');
   };
 
@@ -161,6 +163,29 @@ export default function NewTask() {
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-sm font-medium text-td-text-bright mb-1">작업 시작일</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
+            />
+            <p className="text-xs text-td-text-faint mt-1">기본값: 오늘</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-td-text-bright mb-1">마감일</label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="w-full px-4 py-2.5 bg-td-card border border-td-border rounded-xl text-sm text-td-text focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
+            />
+            <p className="text-xs text-td-text-faint mt-1">선택 사항</p>
           </div>
         </div>
 

@@ -51,7 +51,7 @@ export default function NewTask() {
 
   return (
     <div className="max-w-xl mx-auto">
-      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-td-text-muted hover:text-teal-400 mb-4 transition-colors">
+      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-sm text-td-text-secondary hover:text-teal-600 dark:hover:text-teal-400 mb-4 transition-colors">
         <ArrowLeft size={16} /> 뒤로
       </button>
       <h2 className="text-2xl font-bold text-td-text mb-6">새 작업</h2>

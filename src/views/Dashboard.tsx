@@ -84,18 +84,18 @@ export default function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-4 gap-2 md:gap-4">
         {stats.map(({ title, value, icon: Icon, color, to }) => (
           <Link
             key={title}
             href={to}
-            className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 md:p-5 hover:bg-td-hover-strong hover:border-td-border-strong transition-all shadow-sm"
+            className="bg-td-card backdrop-blur-xl border border-td-border rounded-xl md:rounded-2xl p-2.5 md:p-5 hover:bg-td-hover-strong hover:border-td-border-strong transition-all shadow-sm"
           >
-            <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center mb-2" style={{ backgroundColor: color + '35' }}>
-              <Icon size={18} style={{ color }} className="md:!w-5 md:!h-5" />
+            <div className="w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center mb-1.5 md:mb-2" style={{ backgroundColor: color + '35' }}>
+              <Icon size={14} style={{ color }} className="md:!w-5 md:!h-5" />
             </div>
-            <p className="text-2xl md:text-3xl font-bold text-td-text pl-2"><AnimatedNumber value={value} /></p>
-            <p className="text-xs md:text-sm text-td-text-muted pl-2">{title}</p>
+            <p className="text-lg md:text-3xl font-bold text-td-text"><AnimatedNumber value={value} /></p>
+            <p className="text-[10px] md:text-sm text-td-text-muted leading-tight">{title}</p>
           </Link>
         ))}
       </div>

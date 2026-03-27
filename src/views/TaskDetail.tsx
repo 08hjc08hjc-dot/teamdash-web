@@ -75,7 +75,7 @@ export default function TaskDetail() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-base text-td-text-muted hover:text-teal-400 mb-4 transition-colors">
+      <button onClick={() => router.back()} className="inline-flex items-center gap-1.5 text-base text-td-text-secondary hover:text-teal-600 dark:hover:text-teal-400 mb-4 transition-colors">
         <ArrowLeft size={16} /> 뒤로
       </button>
 
@@ -88,18 +88,18 @@ export default function TaskDetail() {
                   value={task.priority}
                   onChange={(e) => updateTask(task.id, { priority: e.target.value as Priority })}
                   className="text-sm px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 appearance-none text-center"
-                  style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}
+                  style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '50', color: PRIORITY_COLORS[task.priority] }}
                 >
                   {(Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(([val, label]) => (
                     <option key={val} value={val} style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}>{label}</option>
                   ))}
                 </select>
               ) : (
-                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}>
+                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '50', color: PRIORITY_COLORS[task.priority] }}>
                   {PRIORITY_LABELS[task.priority]}
                 </span>
               )}
-              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '30', color: STATUS_COLORS[task.status] }}>
+              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '50', color: STATUS_COLORS[task.status] }}>
                 {TASK_STATUS_LABELS[task.status]}
               </span>
             </div>

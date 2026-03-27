@@ -39,7 +39,7 @@ function TaskCard({ task }: { task: Task }) {
           <div className="min-w-0">
             <p className="text-sm font-semibold text-td-text hover:text-teal-300 transition-colors leading-snug">{task.title}</p>
           </div>
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}>
+          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '50', color: PRIORITY_COLORS[task.priority] }}>
             {PRIORITY_LABELS[task.priority]}
           </span>
         </div>
@@ -228,7 +228,7 @@ export default function Tasks() {
                 <div className="flex items-center gap-2 mb-4 px-1">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] }} />
                   <h3 className="text-sm font-semibold text-td-text">{TASK_STATUS_LABELS[status]}</h3>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '35', color: STATUS_COLORS[status] }}>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold" style={{ backgroundColor: STATUS_COLORS[status] + '55', color: STATUS_COLORS[status] }}>
                     {colTasks.length}
                   </span>
                 </div>

@@ -33,6 +33,9 @@
   --td-scrollbar-track: rgba(0,0,0,0.05);
   --td-scrollbar-thumb: rgba(13,148,136,0.3);
   --td-scrollbar-hover: rgba(13,148,136,0.5);
+  --td-badge-alpha: 50;
+  --td-accent: #0d7377;
+  --td-accent-hover: #0f766e;
 }
 
 .dark {

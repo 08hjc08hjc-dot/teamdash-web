@@ -121,24 +121,17 @@ export default function NewTask() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-td-text-bright mb-2">프로젝트</label>
-          <div className="flex gap-2 flex-wrap">
+          <label className="block text-sm font-medium text-td-text-bright mb-1">프로젝트</label>
+          <select
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+            className="w-full px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
+            style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+          >
             {projects.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setProjectId(p.id)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                  projectId === p.id
-                    ? 'text-white'
-                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
-                }`}
-                style={projectId === p.id ? { backgroundColor: p.color } : undefined}
-              >
-                {p.title}
-              </button>
+              <option key={p.id} value={p.id} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{p.title}</option>
             ))}
-          </div>
+          </select>
         </div>
 
         <div>

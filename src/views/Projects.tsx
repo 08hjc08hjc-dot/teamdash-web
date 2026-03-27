@@ -83,7 +83,7 @@ export default function Projects() {
           <p className="text-xs text-td-text-faint mt-1">첫 번째 프로젝트를 만들어 시작하세요</p>
         </div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 sm:grid sm:grid-cols-2 xl:grid-cols-3 sm:overflow-visible">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {filtered.map((project) => {
             const pTasks = tasks.filter((t) => t.projectId === project.id);
             const { pct, done, total } = getProjectProgress(pTasks);
@@ -94,7 +94,7 @@ export default function Projects() {
               <Link
                 key={project.id}
                 href={`/projects/${project.id}`}
-                className="min-w-[280px] shrink-0 sm:min-w-0 sm:shrink bg-td-card backdrop-blur-xl border border-td-border rounded-2xl hover:bg-td-hover hover:border-td-border-strong transition-all overflow-hidden"
+                className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl hover:bg-td-hover hover:border-td-border-strong transition-all overflow-hidden"
               >
                 <div className="h-1.5" style={{ backgroundColor: project.color }} />
                 <div className="p-4">

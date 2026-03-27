@@ -20,7 +20,7 @@ export default function TaskDetail() {
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task?.projectId));
   const activeProjects = useProjectStore((s) => s.projects.filter((p) => p.status !== 'archived'));
   const allMembers = useTeamStore((s) => s.members);
-  const assignees = allMembers.filter((m) => task?.assigneeIds.includes(m.id));
+  const assignees = allMembers.filter((m) => (task?.assigneeIds ?? []).includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);
   const updateTask = useTaskStore((s) => s.updateTask);
   const removeTask = useTaskStore((s) => s.removeTask);
@@ -178,13 +178,13 @@ export default function TaskDetail() {
                     key={m.id}
                     type="button"
                     onClick={() => {
-                      const ids = task.assigneeIds.includes(m.id)
-                        ? task.assigneeIds.filter((i) => i !== m.id)
+                      const ids = (task.assigneeIds ?? []).includes(m.id)
+                        ? (task.assigneeIds ?? []).filter((i) => i !== m.id)
                         : [...task.assigneeIds, m.id];
                       updateTask(task.id, { assigneeIds: ids });
                     }}
                     className={`flex items-center gap-1.5 px-2.5 py-1 text-sm rounded-lg transition-all ${
-                      task.assigneeIds.includes(m.id)
+                      (task.assigneeIds ?? []).includes(m.id)
                         ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
                         : 'bg-td-card text-td-text-muted hover:bg-td-hover border border-transparent'
                     }`}

@@ -15,12 +15,12 @@ import type { Task, TaskStatus } from '../models';
 function TaskCard({ task }: { task: Task }) {
   const router = useRouter();
   const allMembers = useTeamStore((s) => s.members);
-  const assignees = allMembers.filter((m) => task.assigneeIds.includes(m.id));
+  const assignees = allMembers.filter((m) => (task.assigneeIds ?? []).includes(m.id));
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task.projectId));
   const moveTask = useTaskStore((s) => s.moveTask);
   const { member: myMember } = usePermissions();
 
-  const isAssignee = myMember ? task.assigneeIds.includes(myMember.id) : false;
+  const isAssignee = myMember ? (task.assigneeIds ?? []).includes(myMember.id) : false;
   const canChangeStatus = true;
 
   const milestones = task.milestones ?? [];

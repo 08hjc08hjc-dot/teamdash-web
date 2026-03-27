@@ -23,7 +23,7 @@ export default function ProjectDetail() {
   const allTasks = useTaskStore((s) => s.tasks);
   const tasks = allTasks.filter((t) => t.projectId === id).sort((a, b) => a.order - b.order);
   const allMembers = useTeamStore((s) => s.members);
-  const taskAssigneeIds = [...new Set(tasks.flatMap((t) => t.assigneeIds))];
+  const taskAssigneeIds = [...new Set(tasks.flatMap((t) => t.assigneeIds ?? []))];
   const members = allMembers.filter((m) => taskAssigneeIds.includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);
   const { isAdmin, isOwner } = usePermissions();
@@ -150,7 +150,7 @@ export default function ProjectDetail() {
       ) : (
         <div className="space-y-2">
           {tasks.map((task) => {
-            const taskAssignees = allMembers.filter((m) => task.assigneeIds.includes(m.id));
+            const taskAssignees = allMembers.filter((m) => (task.assigneeIds ?? []).includes(m.id));
             const taskPct = getTaskProgress(task);
             return (
               <Link href={`/tasks/${task.id}`} key={task.id} className="block bg-td-card backdrop-blur-xl rounded-xl p-3 sm:p-4 border border-td-border hover:bg-td-hover-strong transition-all">

@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   const myMember = members.find((m) => m.email === authUser?.email);
   const myTasks = tasks
-    .filter((t) => myMember && t.assigneeIds.includes(myMember.id) && t.status !== 'done')
+    .filter((t) => myMember && (t.assigneeIds ?? []).includes(myMember.id) && t.status !== 'done')
     .sort((a, b) => {
       const po: Record<string, number> = { urgent: 0, high: 1, medium: 2, low: 3 };
       return po[a.priority] - po[b.priority];
@@ -169,7 +169,7 @@ export default function Dashboard() {
           {members.length === 0 && <p className="text-xs text-td-text-muted">팀원이 없습니다</p>}
           <div className="flex gap-4 overflow-x-auto pb-2 snap-x md:grid md:grid-cols-4 lg:grid-cols-5 md:overflow-x-visible md:overflow-y-auto md:snap-none md:pb-0 lg:max-h-[400px] lg:scroll-section lg:pr-1">
             {members.map((member) => {
-              const activeTasks = tasks.filter((t) => t.assigneeIds.includes(member.id) && t.status !== 'done').length;
+              const activeTasks = tasks.filter((t) => (t.assigneeIds ?? []).includes(member.id) && t.status !== 'done').length;
               return (
                 <div key={member.id} className="flex flex-col items-center min-w-[60px] snap-start md:min-w-0">
                   <Avatar name={member.name} color={member.avatarColor} avatarUrl={member.avatarUrl} size={44} />

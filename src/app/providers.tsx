@@ -131,7 +131,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
           </header>
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 md:pt-[calc(2.5rem+env(safe-area-inset-top))] lg:pt-8 pb-[calc(3rem+env(safe-area-inset-bottom))] sm:pb-6 md:pb-[calc(3rem+env(safe-area-inset-bottom))]">
+          <main className="flex-1 overflow-y-auto p-4 pt-6 sm:p-6 md:p-8 md:pt-[calc(2.5rem+env(safe-area-inset-top))] lg:pt-8 pb-[calc(3rem+env(safe-area-inset-bottom))] sm:pb-6 md:pb-[calc(3rem+env(safe-area-inset-bottom))]">
             {children}
           </main>
         </div>

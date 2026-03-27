@@ -176,7 +176,7 @@ export default function Tasks() {
             className={`shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
               projectFilter === p.id ? 'text-white' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
             }`}
-            style={projectFilter === p.id ? { backgroundColor: p.color + 'cc' } : undefined}
+            style={projectFilter === p.id ? { backgroundColor: p.color, opacity: 0.9 } : undefined}
           >
             {p.title}
           </button>
@@ -208,7 +208,7 @@ export default function Tasks() {
                   ? 'text-white'
                   : 'bg-td-card text-td-text-muted'
               }`}
-              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '40', color: STATUS_COLORS[status] } : undefined}
+              style={mobileTab === status ? { backgroundColor: STATUS_COLORS[status] + '55', color: STATUS_COLORS[status] } : undefined}
             >
               {TASK_STATUS_LABELS[status]} ({count})
             </button>

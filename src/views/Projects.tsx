@@ -118,7 +118,7 @@ export default function Projects() {
                       <span className="text-xs text-td-text-muted">진행률</span>
                       <span className="text-sm font-semibold text-teal-400"><AnimatedNumber value={pct} suffix="%" /></span>
                     </div>
-                    <div className="h-1.5 bg-td-input rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all animate-bar" style={{ width: `${pct}%`, backgroundColor: project.color }} />
                     </div>
                     <p className="text-xs text-td-text-muted mt-1">{done}/{total} 완료</p>

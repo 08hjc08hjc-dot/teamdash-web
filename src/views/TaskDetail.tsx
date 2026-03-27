@@ -256,7 +256,7 @@ export default function TaskDetail() {
             )}
           </div>
           {msTotal > 0 && (
-            <div className="h-1.5 bg-td-input rounded-full overflow-hidden mb-3">
+            <div className="h-1.5 bg-slate-200 dark:bg-td-input rounded-full overflow-hidden mb-3">
               <div className="h-full rounded-full bg-teal-500 transition-all animate-bar" style={{ width: `${msPct}%` }} />
             </div>
           )}

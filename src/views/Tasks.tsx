@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Calendar } from 'lucide-react';
-import { useTaskStore, useProjectStore, useTeamStore } from '../store';
+import { useTaskStore, useProjectStore, useTeamStore, useAuthStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { PRIORITY_COLORS, STATUS_COLORS } from '../theme';
 import { TASK_STATUS_LABELS, PRIORITY_LABELS } from '../constants';
@@ -133,11 +133,16 @@ export default function Tasks() {
   const tasks = useTaskStore((s) => s.tasks);
   const allProjects = useProjectStore((s) => s.projects);
   const projects = allProjects.filter((p) => p.status === 'active');
+  const authUser = useAuthStore((s) => s.user);
+  const members = useTeamStore((s) => s.members);
+  const myMember = members.find((m) => m.email === authUser?.email);
   const [projectFilter, setProjectFilter] = useState<string | undefined>();
+  const [myTasksOnly, setMyTasksOnly] = useState(false);
   const [search, setSearch] = useState('');
   const [mobileTab, setMobileTab] = useState<TaskStatus>('todo');
 
   const filteredTasks = tasks.filter((t) => {
+    if (myTasksOnly && myMember && !(t.assigneeIds ?? []).includes(myMember.id)) return false;
     if (projectFilter && t.projectId !== projectFilter) return false;
     if (search && !t.title.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -160,19 +165,29 @@ export default function Tasks() {
       {/* Project filter */}
       <div className="flex gap-2 md:gap-2.5 mb-4 overflow-x-auto scrollbar-hide pb-1 max-w-full">
         <button
-          onClick={() => setProjectFilter(undefined)}
+          onClick={() => { setProjectFilter(undefined); setMyTasksOnly(false); }}
           className={`shrink-0 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
-            !projectFilter
+            !projectFilter && !myTasksOnly
               ? 'bg-teal-600 text-white border border-teal-700 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
               : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
           }`}
         >
           전체 프로젝트
         </button>
+        <button
+          onClick={() => { setMyTasksOnly(!myTasksOnly); setProjectFilter(undefined); }}
+          className={`shrink-0 px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm font-medium rounded-lg transition-all whitespace-nowrap ${
+            myTasksOnly
+              ? 'bg-teal-600 text-white border border-teal-700 dark:bg-teal-500/20 dark:text-teal-300 dark:border-teal-500/20'
+              : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
+          }`}
+        >
+          내 작업
+        </button>
         {projects.map((p) => (
           <button
             key={p.id}
-            onClick={() => setProjectFilter(projectFilter === p.id ? undefined : p.id)}
+            onClick={() => { setProjectFilter(projectFilter === p.id ? undefined : p.id); setMyTasksOnly(false); }}
             className={`shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
               projectFilter === p.id ? 'text-white' : 'bg-td-card text-td-text-muted hover:bg-td-hover hover:text-td-text-bright'
             }`}

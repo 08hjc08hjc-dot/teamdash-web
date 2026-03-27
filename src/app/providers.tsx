@@ -109,7 +109,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Top bar (phone only) */}
-          <header className="flex items-center justify-between px-4 border-b border-td-border bg-td-bg-soft backdrop-blur-xl md:hidden shrink-0 pt-[calc(0.75rem+env(safe-area-inset-top))] h-[calc(4.5rem+env(safe-area-inset-top))]">
+          <header className="flex items-center justify-between px-4 border-b border-black/20 dark:border-td-border bg-td-bg-soft backdrop-blur-xl md:hidden shrink-0 pt-[calc(0.75rem+env(safe-area-inset-top))] h-[calc(4.5rem+env(safe-area-inset-top))]">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -117,7 +117,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <Menu size={18} className="text-td-text-secondary" />
               </button>
-              <Link href="/" className="text-base font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
+              <Link href="/" className="text-base font-bold bg-gradient-to-r from-teal-600 to-cyan-600 dark:from-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">팀대시</Link>
             </div>
             <div className="flex items-center gap-2">
               <ThemeToggle />

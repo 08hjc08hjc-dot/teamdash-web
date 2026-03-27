@@ -71,8 +71,12 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
     return lo <= we && hi >= ws;
   });
 
-  // Sort: earlier start → longer duration → alphabetical
+  // Sort: group by project → earlier start → longer duration
+  const projOrder = new Map(projects.map((p, i) => [p.id, i]));
   hits.sort((a, b) => {
+    const pa = projOrder.get(a.projectId) ?? 999;
+    const pb = projOrder.get(b.projectId) ?? 999;
+    if (pa !== pb) return pa - pb;
     const as_ = new Date(a.startDate ?? a.createdAt).getTime();
     const bs_ = new Date(b.startDate ?? b.createdAt).getTime();
     if (as_ !== bs_) return as_ - bs_;
@@ -256,7 +260,7 @@ export default function Calendar() {
                             borderLeft: bar.isHead ? `3px solid ${bar.color}` : 'none',
                           }}
                         >
-                          {bar.isHead ? bar.task.title : ''}
+                          {bar.task.title}
                         </Link>
                       );
                     })}

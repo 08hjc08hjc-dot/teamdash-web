@@ -71,7 +71,7 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
     return lo <= we && hi >= ws;
   });
 
-  // Sort: group by project → earlier start → longer duration
+  // Sort: group by project → longer duration first → earlier start
   const projOrder = new Map(projects.map((p, i) => [p.id, i]));
   hits.sort((a, b) => {
     const pa = projOrder.get(a.projectId) ?? 999;
@@ -79,10 +79,12 @@ function layoutBars(tasks: Task[], week: Date[], projects: { id: string; color: 
     if (pa !== pb) return pa - pb;
     const as_ = new Date(a.startDate ?? a.createdAt).getTime();
     const bs_ = new Date(b.startDate ?? b.createdAt).getTime();
-    if (as_ !== bs_) return as_ - bs_;
     const ae = a.dueDate ? new Date(a.dueDate).getTime() : as_;
     const be = b.dueDate ? new Date(b.dueDate).getTime() : bs_;
-    return (be - bs_) - (ae - as_);
+    const durA = ae - as_;
+    const durB = be - bs_;
+    if (durA !== durB) return durB - durA;
+    return as_ - bs_;
   });
 
   const bars: Bar[] = [];

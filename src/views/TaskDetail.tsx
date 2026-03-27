@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Calendar, Trash2, Plus, X, CheckSquare, Square, Pencil } from 'lucide-react';
+import { ArrowLeft, Calendar, Trash2, Plus, X, CheckSquare, Square, Pencil, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useTaskStore, useProjectStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
@@ -31,9 +31,8 @@ export default function TaskDetail() {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [msInput, setMsInput] = useState('');
 
-  // Editing states
-  const [editingTitle, setEditingTitle] = useState(false);
-  const [editingDesc, setEditingDesc] = useState(false);
+  // Single edit mode toggle
+  const [editing, setEditing] = useState(false);
   const [titleVal, setTitleVal] = useState('');
   const [descVal, setDescVal] = useState('');
 
@@ -62,11 +61,16 @@ export default function TaskDetail() {
     setMsInput('');
   };
 
-  const startEditTitle = () => { setTitleVal(task.title); setEditingTitle(true); };
-  const saveTitle = () => { if (titleVal.trim()) updateTask(task.id, { title: titleVal.trim() }); setEditingTitle(false); };
+  const startEditing = () => {
+    setTitleVal(task.title);
+    setDescVal(task.description);
+    setEditing(true);
+  };
 
-  const startEditDesc = () => { setDescVal(task.description); setEditingDesc(true); };
-  const saveDesc = () => { updateTask(task.id, { description: descVal }); setEditingDesc(false); };
+  const saveEditing = () => {
+    if (titleVal.trim()) updateTask(task.id, { title: titleVal.trim(), description: descVal });
+    setEditing(false);
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -78,107 +82,134 @@ export default function TaskDetail() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              <select
-                value={task.priority}
-                onChange={(e) => updateTask(task.id, { priority: e.target.value as Priority })}
-                className="text-sm px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 appearance-none text-center"
-                style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}
-              >
-                {(Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(([val, label]) => (
-                  <option key={val} value={val}>{label}</option>
-                ))}
-              </select>
+              {editing ? (
+                <select
+                  value={task.priority}
+                  onChange={(e) => updateTask(task.id, { priority: e.target.value as Priority })}
+                  className="text-sm px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 appearance-none text-center"
+                  style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}
+                >
+                  {(Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(([val, label]) => (
+                    <option key={val} value={val}>{label}</option>
+                  ))}
+                </select>
+              ) : (
+                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}>
+                  {PRIORITY_LABELS[task.priority]}
+                </span>
+              )}
               <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '30', color: STATUS_COLORS[task.status] }}>
                 {TASK_STATUS_LABELS[task.status]}
               </span>
             </div>
-            {editingTitle ? (
+            {editing ? (
               <input
                 autoFocus
                 value={titleVal}
                 onChange={(e) => setTitleVal(e.target.value)}
-                onBlur={saveTitle}
-                onKeyDown={(e) => { if (e.key === 'Enter') saveTitle(); if (e.key === 'Escape') setEditingTitle(false); }}
+                onKeyDown={(e) => { if (e.key === 'Enter') saveEditing(); if (e.key === 'Escape') setEditing(false); }}
                 className="w-full text-xl sm:text-2xl font-bold text-td-text bg-transparent border-b-2 border-teal-500 focus:outline-none"
               />
             ) : (
-              <h2 onClick={startEditTitle} className="text-xl sm:text-2xl font-bold text-td-text cursor-pointer hover:text-teal-300 transition-colors group">
-                {task.title} <Pencil size={14} className="inline ml-1 text-td-text-faint opacity-0 group-hover:opacity-100 transition-opacity" />
-              </h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-td-text">{task.title}</h2>
             )}
           </div>
-          {isAdmin && (
+          <div className="flex items-center gap-1 self-start shrink-0">
             <button
-              onClick={() => setDeleteDialog(true)}
-              className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors self-start shrink-0"
+              onClick={editing ? saveEditing : startEditing}
+              className={`p-2 rounded-lg transition-colors ${editing ? 'text-teal-400 hover:bg-teal-500/10' : 'text-td-text-muted hover:bg-td-hover'}`}
             >
-              <Trash2 size={18} />
+              {editing ? <Check size={18} /> : <Pencil size={18} />}
             </button>
-          )}
+            {isAdmin && (
+              <button
+                onClick={() => setDeleteDialog(true)}
+                className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Description */}
-        {editingDesc ? (
+        {editing ? (
           <textarea
-            autoFocus
             value={descVal}
             onChange={(e) => setDescVal(e.target.value)}
-            onBlur={saveDesc}
-            onKeyDown={(e) => { if (e.key === 'Escape') setEditingDesc(false); }}
+            onKeyDown={(e) => { if (e.key === 'Escape') setEditing(false); }}
             rows={3}
+            placeholder="설명을 입력하세요..."
             className="w-full mt-3 text-base text-td-text-secondary bg-transparent border border-td-border rounded-xl p-3 focus:outline-none focus:ring-1 focus:ring-teal-500/50 resize-none"
           />
         ) : (
-          <p onClick={startEditDesc} className="text-base text-td-text-secondary mt-3 cursor-pointer hover:text-td-text transition-colors group min-h-[24px]">
-            {task.description || '설명을 추가하세요...'} <Pencil size={12} className="inline ml-1 text-td-text-faint opacity-0 group-hover:opacity-100 transition-opacity" />
-          </p>
+          task.description && <p className="text-base text-td-text-secondary mt-3">{task.description}</p>
         )}
 
         <div className="mt-6 space-y-3">
           {/* Project */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-td-text-muted w-16 shrink-0">프로젝트</span>
-            <select
-              value={task.projectId}
-              onChange={(e) => updateTask(task.id, { projectId: e.target.value })}
-              className="text-base font-medium text-td-text bg-transparent border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 rounded"
-            >
-              {activeProjects.map((p) => (
-                <option key={p.id} value={p.id}>{p.title}</option>
-              ))}
-            </select>
+            {editing ? (
+              <select
+                value={task.projectId}
+                onChange={(e) => updateTask(task.id, { projectId: e.target.value })}
+                className="text-base font-medium text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+              >
+                {activeProjects.map((p) => (
+                  <option key={p.id} value={p.id}>{p.title}</option>
+                ))}
+              </select>
+            ) : project ? (
+              <Link href={`/projects/${project.id}`} className="flex items-center gap-1.5 hover:text-teal-400 transition-colors">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: project.color }} />
+                <span className="text-base font-medium text-td-text">{project.title}</span>
+              </Link>
+            ) : null}
           </div>
 
           {/* Assignee */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-td-text-muted w-16 shrink-0">담당자</span>
-            <div className="flex items-center gap-1.5">
-              {assignee && <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={20} />}
+            {editing ? (
               <select
                 value={task.assigneeId ?? ''}
                 onChange={(e) => updateTask(task.id, { assigneeId: e.target.value || null })}
-                className="text-base text-td-text bg-transparent border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 rounded"
+                className="text-base text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
               >
                 <option value="">미배정</option>
                 {allMembers.map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
               </select>
-            </div>
+            ) : assignee ? (
+              <div className="flex items-center gap-1.5">
+                <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={20} />
+                <span className="text-base text-td-text">{assignee.name}</span>
+              </div>
+            ) : (
+              <span className="text-base text-td-text-faint">미배정</span>
+            )}
           </div>
 
           {/* Due date */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-td-text-muted w-16 shrink-0">마감일</span>
-            <div className="flex items-center gap-1.5">
-              <Calendar size={14} className="text-td-text-muted" />
+            {editing ? (
               <input
                 type="date"
                 value={task.dueDate ?? ''}
                 onChange={(e) => updateTask(task.id, { dueDate: e.target.value || null })}
-                className="text-base text-td-text bg-transparent border-0 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50 rounded"
+                className="text-base text-td-text bg-transparent border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
               />
-            </div>
+            ) : task.dueDate ? (
+              <div className="flex items-center gap-1.5 text-td-text-bright">
+                <Calendar size={14} />
+                <span className="text-base">{formatDate(task.dueDate)}</span>
+              </div>
+            ) : (
+              <span className="text-base text-td-text-faint">없음</span>
+            )}
           </div>
         </div>
 

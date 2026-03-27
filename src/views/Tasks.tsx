@@ -14,14 +14,13 @@ import type { Task, TaskStatus } from '../models';
 
 function TaskCard({ task }: { task: Task }) {
   const router = useRouter();
-  const allMembers = useTeamStore((s) => s.members);
-  const assignees = allMembers.filter((m) => (task.assigneeIds ?? []).includes(m.id));
+  const assignee = useTeamStore((s) => s.members.find((m) => m.id === task.assigneeId));
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task.projectId));
   const moveTask = useTaskStore((s) => s.moveTask);
-  const { member: myMember } = usePermissions();
+  const { isAdmin, member: myMember } = usePermissions();
 
-  const isAssignee = myMember ? (task.assigneeIds ?? []).includes(myMember.id) : false;
-  const canChangeStatus = true;
+  const isAssignee = myMember?.id === task.assigneeId;
+  const canChangeStatus = isAdmin || isAssignee;
 
   const milestones = task.milestones ?? [];
   const msDone = milestones.filter((m) => m.completed).length;
@@ -60,12 +59,10 @@ function TaskCard({ task }: { task: Task }) {
         </div>
 
         <div className="flex items-center justify-between mt-3">
-          {assignees.length > 0 ? (
-            <div className="flex items-center -space-x-1.5">
-              {assignees.slice(0, 3).map((a) => (
-                <Avatar key={a.id} name={a.name} color={a.avatarColor} avatarUrl={a.avatarUrl} size={22} />
-              ))}
-              {assignees.length > 3 && <span className="text-[10px] text-td-text-muted ml-2">+{assignees.length - 3}</span>}
+          {assignee ? (
+            <div className="flex items-center gap-1.5">
+              <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={22} />
+              <span className="text-xs text-td-text-secondary">{assignee.name}</span>
             </div>
           ) : <div />}
           <div className="flex items-center gap-1.5 text-td-text-muted">

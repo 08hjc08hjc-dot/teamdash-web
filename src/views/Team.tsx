@@ -27,8 +27,8 @@ export default function Team() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {members.map((member) => {
-            const activeTasks = tasks.filter((t) => (t.assigneeIds ?? []).includes(member.id) && t.status !== 'done').length;
-            const completedTasks = tasks.filter((t) => (t.assigneeIds ?? []).includes(member.id) && t.status === 'done').length;
+            const activeTasks = tasks.filter((t) => t.assigneeId === member.id && t.status !== 'done').length;
+            const completedTasks = tasks.filter((t) => t.assigneeId === member.id && t.status === 'done').length;
 
             return (
               <div key={member.id} className="bg-td-card backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-td-border hover:bg-td-hover-strong hover:border-td-border-strong transition-all">

@@ -15,7 +15,7 @@ interface TaskStore {
     status: TaskStatus;
     priority: Priority;
     projectId: string;
-    assigneeIds: string[];
+    assigneeId: string | null;
     dueDate: string | null;
   }) => Task;
   updateTask: (id: string, updates: Partial<Task>) => void;
@@ -31,10 +31,7 @@ interface TaskStore {
 const KEY = 'teamdash-tasks';
 
 export const useTaskStore = create<TaskStore>()((set, get) => ({
-  tasks: loadFromStorage<Task[]>(KEY, 'tasks', []).map((t: any) => {
-    const { assigneeId, ...rest } = t;
-    return { ...rest, assigneeIds: t.assigneeIds ?? (assigneeId ? [assigneeId] : []) };
-  }),
+  tasks: loadFromStorage<Task[]>(KEY, 'tasks', []),
   addTask: (params) => {
     const now = new Date().toISOString();
     const tasksInStatus = get().tasks.filter((t) => t.status === params.status);

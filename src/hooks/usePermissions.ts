@@ -24,7 +24,7 @@ export function usePermissions() {
     isOwner: role === 'owner',
     isAdmin: role === 'owner' || role === 'admin',
     canManageTeam: role === 'owner' || role === 'admin',
-    canAssignOthers: true,
+    canAssignOthers: role === 'owner' || role === 'admin',
     canCreateProject: role === 'owner' || role === 'admin' || role === 'member',
     canGrantRole: (targetRole: TeamRole): boolean => {
       if (role === 'owner') return true;

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus, Clock, Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import { useTaskStore, useProjectStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { PRIORITY_COLORS, STATUS_COLORS } from '../theme';
@@ -72,9 +72,9 @@ function TaskCard({ task }: { task: Task }) {
               </span>
             </div>
           ) : <div />}
-          <div className="flex items-center gap-1.5 text-td-text-muted">
-            <Clock size={11} />
-            <span className="text-xs">{formatDate(task.updatedAt)}</span>
+          <div className="flex items-center gap-2 text-td-text-muted">
+            <span className="text-xs">작성 {formatDate(task.createdAt)}</span>
+            {task.dueDate && <span className="text-xs">· 마감 {formatDate(task.dueDate)}</span>}
           </div>
         </div>
 

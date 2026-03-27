@@ -103,7 +103,14 @@ export const useTaskStore = create<TaskStore>()((set, get) => ({
       return idx >= 0 ? { ...t, order: idx } : t;
     }),
   })),
-  setTasks: (tasks) => set({ tasks }),
+  setTasks: (tasks) => set({
+    tasks: tasks.map((t: any) => {
+      if (Array.isArray(t.assigneeIds)) return t;
+      const ids = t.assigneeId ? [t.assigneeId] : [];
+      const { assigneeId: _, ...rest } = t;
+      return { ...rest, assigneeIds: ids };
+    }),
+  }),
   addMilestone: (taskId, title) => {
     const task = get().tasks.find((t) => t.id === taskId);
     set((s) => ({

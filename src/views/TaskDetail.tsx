@@ -18,7 +18,8 @@ export default function TaskDetail() {
   const router = useRouter();
   const task = useTaskStore((s) => s.tasks.find((t) => t.id === id));
   const project = useProjectStore((s) => s.projects.find((p) => p.id === task?.projectId));
-  const activeProjects = useProjectStore((s) => s.projects.filter((p) => p.status !== 'archived'));
+  const allProjects = useProjectStore((s) => s.projects);
+  const activeProjects = allProjects.filter((p) => p.status !== 'archived');
   const allMembers = useTeamStore((s) => s.members);
   const assignees = allMembers.filter((m) => (task?.assigneeIds ?? []).includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);

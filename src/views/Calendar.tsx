@@ -304,8 +304,8 @@ export default function Calendar() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-td-text truncate">{task.title}</p>
                       <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                        <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium"
-                          className="badge-colored" style={{ backgroundColor: STATUS_COLORS[task.status], '--badge-color': STATUS_COLORS[task.status] } as React.CSSProperties}
+                        <span className="text-[11px] px-1.5 py-0.5 rounded-full font-medium badge-colored"
+                          style={{ backgroundColor: STATUS_COLORS[task.status], '--badge-color': STATUS_COLORS[task.status] } as React.CSSProperties}
                         >{TASK_STATUS_LABELS[task.status]}</span>
                         <span className="text-[11px] text-td-text-faint">
                           {created.getMonth() + 1}/{created.getDate()} ~ {dueDate.getMonth() + 1}/{dueDate.getDate()}

@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://cdn.jsdelivr.net/gh/ayaan-fonts/Freesentation/fonts/webfonts/Freesentation.css"
         />
       </head>
-      <body className="bg-[#0f0d1a]">
+      <body className="bg-[var(--td-bg)]">
         <Providers>{children}</Providers>
       </body>
     </html>

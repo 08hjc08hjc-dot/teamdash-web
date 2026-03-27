@@ -64,7 +64,7 @@ export default function Dashboard() {
     })
     .slice(0, 5);
 
-  const activeProjects = projects;
+  const activeProjects = projects.filter((p) => p.status !== 'completed');
 
   const stats = [
     { title: '프로젝트', value: projectCount, icon: FolderKanban, color: '#0d9488', to: '/projects' },

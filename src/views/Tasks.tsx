@@ -39,7 +39,7 @@ function TaskCard({ task }: { task: Task }) {
           <div className="min-w-0">
             <p className="text-sm font-semibold text-td-text hover:text-teal-300 transition-colors leading-snug">{task.title}</p>
           </div>
-          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 animate-pulse-dot" style={{ backgroundColor: PRIORITY_COLORS[task.priority], color: '#fff' }}>
+          <span className="text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ml-2 badge-colored" style={{ backgroundColor: PRIORITY_COLORS[task.priority], '--badge-color': PRIORITY_COLORS[task.priority] } as React.CSSProperties}>
             {PRIORITY_LABELS[task.priority]}
           </span>
         </div>

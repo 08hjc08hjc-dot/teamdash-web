@@ -135,7 +135,7 @@ export default function ProjectDetail() {
           {(['todo', 'in_progress', 'done'] as const).map((status) => {
             const count = tasks.filter((t) => t.status === status).length;
             return (
-              <span key={status} className="text-sm px-3 py-1 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[status] + '70', color: '#fff' }}>
+              <span key={status} className="text-sm px-3 py-1 rounded-full font-medium badge-colored" style={{ backgroundColor: STATUS_COLORS[status], '--badge-color': STATUS_COLORS[status] } as React.CSSProperties}>
                 {TASK_STATUS_LABELS[status]}: {count}
               </span>
             );
@@ -164,10 +164,10 @@ export default function ProjectDetail() {
                 </div>
                 {/* Badges row */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status] + '75', color: '#fff' }}>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium badge-colored" style={{ backgroundColor: STATUS_COLORS[task.status], '--badge-color': STATUS_COLORS[task.status] } as React.CSSProperties}>
                     {TASK_STATUS_LABELS[task.status]}
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '75', color: '#fff' }}>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium badge-colored" style={{ backgroundColor: PRIORITY_COLORS[task.priority], '--badge-color': PRIORITY_COLORS[task.priority] } as React.CSSProperties}>
                     {PRIORITY_LABELS[task.priority]}
                   </span>
                   {taskAssignees.length > 0 && (

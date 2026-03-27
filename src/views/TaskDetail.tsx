@@ -95,11 +95,11 @@ export default function TaskDetail() {
                   ))}
                 </select>
               ) : (
-                <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority], color: '#fff' }}>
+                <span className="text-sm px-2 py-0.5 rounded-full font-medium badge-colored" style={{ backgroundColor: PRIORITY_COLORS[task.priority], '--badge-color': PRIORITY_COLORS[task.priority] } as React.CSSProperties}>
                   {PRIORITY_LABELS[task.priority]}
                 </span>
               )}
-              <span className="text-sm px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: STATUS_COLORS[task.status], color: '#fff' }}>
+              <span className="text-sm px-2 py-0.5 rounded-full font-medium badge-colored" style={{ backgroundColor: STATUS_COLORS[task.status], '--badge-color': STATUS_COLORS[task.status] } as React.CSSProperties}>
                 {TASK_STATUS_LABELS[task.status]}
               </span>
             </div>

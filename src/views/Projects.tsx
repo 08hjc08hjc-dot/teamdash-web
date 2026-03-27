@@ -26,11 +26,16 @@ export default function Projects() {
   const [filter, setFilter] = useState<ProjectStatus | 'all'>('all');
   const { canCreateProject } = usePermissions();
 
-  const filtered = projects.filter((p) => {
-    if (filter !== 'all' && p.status !== filter) return false;
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+  const filtered = projects
+    .filter((p) => {
+      if (filter !== 'all' && p.status !== filter) return false;
+      if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const order: Record<string, number> = { active: 0, archived: 1, completed: 2 };
+      return (order[a.status] ?? 1) - (order[b.status] ?? 1);
+    });
 
   return (
     <div>
@@ -100,11 +105,9 @@ export default function Projects() {
                 <div className="p-4">
                   <div className="flex items-start justify-between">
                     <h3 className="text-sm font-semibold text-td-text">{project.title}</h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      project.status === 'active' ? 'bg-green-600 text-white animate-glow-active' :
-                      project.status === 'completed' ? 'bg-blue-600 text-white' :
-                      'bg-td-card text-td-text-muted'
-                    }`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium badge-colored ${
+                      project.status === 'active' ? 'animate-glow-active' : ''
+                    }`} style={project.status !== 'archived' ? { backgroundColor: project.status === 'active' ? '#10b981' : '#3b82f6', '--badge-color': project.status === 'active' ? '#10b981' : '#3b82f6' } as React.CSSProperties : undefined}>
                       {PROJECT_STATUS_LABELS[project.status]}
                     </span>
                   </div>

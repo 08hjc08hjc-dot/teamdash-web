@@ -195,6 +195,18 @@ body {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+/* Badge: solid fill in light, outline in dark */
+.badge-colored {
+  color: #fff;
+  border: 1px solid transparent;
+}
+.dark .badge-colored {
+  background-color: color-mix(in srgb, var(--badge-color) 18%, transparent) !important;
+  color: var(--badge-color) !important;
+  border-color: color-mix(in srgb, var(--badge-color) 40%, transparent);
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--badge-color) 25%, transparent);
+}
+
 @keyframes glow-active {
   0%, 100% { box-shadow: 0 0 4px 1px rgba(34, 197, 94, 0.5); }
   50% { box-shadow: 0 0 12px 4px rgba(34, 197, 94, 0.9); }

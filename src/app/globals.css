@@ -5,34 +5,34 @@
 /* ─── Theme Variables ─── */
 :root {
   --td-bg: #f1f5f9;
-  --td-bg-soft: rgba(241,245,249,0.7);
-  --td-card: rgba(255,255,255,0.55);
-  --td-card-hover: rgba(255,255,255,0.7);
-  --td-surface: rgba(241,245,249,0.5);
-  --td-surface-alt: rgba(248,250,252,0.5);
+  --td-bg-soft: rgba(241,245,249,0.9);
+  --td-card: rgba(255,255,255,0.92);
+  --td-card-hover: rgba(255,255,255,0.97);
+  --td-surface: rgba(241,245,249,0.85);
+  --td-surface-alt: rgba(248,250,252,0.85);
   --td-input: #f1f5f9;
-  --td-input-border: #cbd5e1;
+  --td-input-border: #94a3b8;
   --td-text: #020617;
   --td-text-bright: #0f172a;
-  --td-text-secondary: #334155;
-  --td-text-muted: #475569;
-  --td-text-faint: #64748b;
-  --td-border: #e2e8f0;
-  --td-border-subtle: #f1f5f9;
-  --td-border-strong: #cbd5e1;
-  --td-hover: rgba(241,245,249,0.5);
-  --td-hover-strong: rgba(226,232,240,0.6);
-  --td-sidebar: rgba(255,255,255,0.6);
-  --td-overlay: rgba(255,255,255,0.85);
+  --td-text-secondary: #1e293b;
+  --td-text-muted: #334155;
+  --td-text-faint: #475569;
+  --td-border: #cbd5e1;
+  --td-border-subtle: #e2e8f0;
+  --td-border-strong: #94a3b8;
+  --td-hover: rgba(241,245,249,0.7);
+  --td-hover-strong: rgba(226,232,240,0.8);
+  --td-sidebar: rgba(255,255,255,0.92);
+  --td-overlay: rgba(255,255,255,0.92);
   --td-select: #ffffff;
-  --td-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
-  --td-glass-bg: rgba(255,255,255,0.45);
-  --td-glass-strong: rgba(255,255,255,0.6);
-  --td-glass-border: rgba(0,0,0,0.08);
-  --td-glass-border-strong: rgba(0,0,0,0.12);
-  --td-scrollbar-track: rgba(0,0,0,0.03);
-  --td-scrollbar-thumb: rgba(13,148,136,0.25);
-  --td-scrollbar-hover: rgba(13,148,136,0.4);
+  --td-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06);
+  --td-glass-bg: rgba(255,255,255,0.8);
+  --td-glass-strong: rgba(255,255,255,0.9);
+  --td-glass-border: rgba(0,0,0,0.1);
+  --td-glass-border-strong: rgba(0,0,0,0.15);
+  --td-scrollbar-track: rgba(0,0,0,0.05);
+  --td-scrollbar-thumb: rgba(13,148,136,0.3);
+  --td-scrollbar-hover: rgba(13,148,136,0.5);
 }
 
 .dark {

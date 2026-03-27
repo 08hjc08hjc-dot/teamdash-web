@@ -23,7 +23,8 @@ export default function ProjectDetail() {
   const allTasks = useTaskStore((s) => s.tasks);
   const tasks = allTasks.filter((t) => t.projectId === id).sort((a, b) => a.order - b.order);
   const allMembers = useTeamStore((s) => s.members);
-  const members = allMembers.filter((m) => project?.memberIds.includes(m.id));
+  const taskAssigneeIds = [...new Set(tasks.map((t) => t.assigneeId).filter(Boolean))] as string[];
+  const members = allMembers.filter((m) => taskAssigneeIds.includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);
   const { isAdmin, isOwner } = usePermissions();
   const [deleteDialog, setDeleteDialog] = useState(false);

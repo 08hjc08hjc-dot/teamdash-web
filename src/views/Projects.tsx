@@ -87,7 +87,8 @@ export default function Projects() {
           {filtered.map((project) => {
             const pTasks = tasks.filter((t) => t.projectId === project.id);
             const { pct, done, total } = getProjectProgress(pTasks);
-            const pMembers = members.filter((m) => project.memberIds.includes(m.id));
+            const assigneeIds = [...new Set(pTasks.map((t) => t.assigneeId).filter(Boolean))] as string[];
+            const pMembers = members.filter((m) => assigneeIds.includes(m.id));
 
             return (
               <Link

@@ -3,30 +3,23 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Check } from 'lucide-react';
-import { useProjectStore, useTeamStore } from '../store';
-import { Avatar } from '../components/ui/Avatar';
+import { useProjectStore } from '../store';
 import { PROJECT_COLORS } from '../theme';
 import { usePermissions } from '../hooks/usePermissions';
 
 export default function NewProject() {
   const router = useRouter();
   const addProject = useProjectStore((s) => s.addProject);
-  const members = useTeamStore((s) => s.members);
   const { canCreateProject } = usePermissions();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [color, setColor] = useState(PROJECT_COLORS[0]);
-  const [memberIds, setMemberIds] = useState<string[]>([]);
-
-  const toggleMember = (id: string) => {
-    setMemberIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    addProject(title.trim(), description.trim(), color, memberIds);
+    addProject(title.trim(), description.trim(), color, []);
     router.push('/projects');
   };
 
@@ -81,32 +74,6 @@ export default function NewProject() {
                 style={{ backgroundColor: c }}
               >
                 {color === c && <Check size={14} className="text-white" />}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-td-text-bright mb-2">멤버</label>
-          <div className="space-y-1">
-            {members.map((m) => (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => toggleMember(m.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
-                  memberIds.includes(m.id)
-                    ? 'bg-teal-500/15 border border-teal-500/20'
-                    : 'bg-td-card hover:bg-td-hover-strong border border-transparent'
-                }`}
-              >
-                <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={28} />
-                <span className="text-sm text-td-text-bright flex-1 truncate">{m.name}</span>
-                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
-                  memberIds.includes(m.id) ? 'border-teal-500 bg-teal-500' : 'border-td-input-border'
-                }`}>
-                  {memberIds.includes(m.id) && <Check size={10} className="text-white" />}
-                </div>
               </button>
             ))}
           </div>

@@ -12,8 +12,8 @@ const NAV_ITEMS = [
   { to: '/projects', icon: FolderKanban, label: '프로젝트' },
   { to: '/tasks', icon: ClipboardCheck, label: '작업 보드' },
   { to: '/calendar', icon: CalendarDays, label: '일정' },
-  { to: '/team', icon: Users, label: '팀' },
   { to: '/ideas', icon: Lightbulb, label: '아이디어' },
+  { to: '/team', icon: Users, label: '팀' },
   { to: '/settings', icon: Settings, label: '설정' },
 ];
 

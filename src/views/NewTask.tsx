@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Check } from 'lucide-react';
 import { useTaskStore, useProjectStore, useTeamStore } from '../store';
@@ -27,7 +27,9 @@ export default function NewTask() {
   const [priority, setPriority] = useState<Priority>('medium');
   const [projectId, setProjectId] = useState(projects[0]?.id ?? '');
   const [assigneeIds, setAssigneeIds] = useState<string[]>(canAssignOthers ? [] : (myMember ? [myMember.id] : []));
-  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [startDate, setStartDate] = useState('');
+
+  useEffect(() => { setStartDate(new Date().toISOString().slice(0, 10)); }, []);
   const [dueDate, setDueDate] = useState('');
 
   const toggleAssignee = (id: string) => {

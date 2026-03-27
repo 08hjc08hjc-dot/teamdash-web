@@ -44,7 +44,7 @@ export default function TaskDetail() {
   const milestones = task.milestones ?? [];
   const msDone = milestones.filter((m) => m.completed).length;
   const msTotal = milestones.length;
-  const msPct = msTotal > 0 ? Math.round((msDone / msTotal) * 100) : 0;
+  const msPct = task.status === 'done' ? 100 : msTotal > 0 ? Math.round((msDone / msTotal) * 100) : 0;
 
   const handleDelete = () => {
     removeTask(task.id);

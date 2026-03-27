@@ -27,9 +27,10 @@ export function generateId(): string {
 
 /** Single task progress (0-100) based on milestones or status */
 export function getTaskProgress(task: { milestones?: { completed: boolean }[]; status: string }): number {
+  if (task.status === 'done') return 100;
   const ms = task.milestones ?? [];
   if (ms.length > 0) return Math.round((ms.filter((m) => m.completed).length / ms.length) * 100);
-  return task.status === 'done' ? 100 : 0;
+  return 0;
 }
 
 /** Project progress: average of all task progresses, plus done task count */

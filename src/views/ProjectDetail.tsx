@@ -23,7 +23,7 @@ export default function ProjectDetail() {
   const allTasks = useTaskStore((s) => s.tasks);
   const tasks = allTasks.filter((t) => t.projectId === id).sort((a, b) => a.order - b.order);
   const allMembers = useTeamStore((s) => s.members);
-  const taskAssigneeIds = [...new Set(tasks.map((t) => t.assigneeId).filter(Boolean))] as string[];
+  const taskAssigneeIds = [...new Set(tasks.flatMap((t) => t.assigneeIds))];
   const members = allMembers.filter((m) => taskAssigneeIds.includes(m.id));
   const moveTask = useTaskStore((s) => s.moveTask);
   const { isAdmin, isOwner } = usePermissions();
@@ -150,7 +150,7 @@ export default function ProjectDetail() {
       ) : (
         <div className="space-y-2">
           {tasks.map((task) => {
-            const assignee = allMembers.find((m) => m.id === task.assigneeId);
+            const taskAssignees = allMembers.filter((m) => task.assigneeIds.includes(m.id));
             const taskPct = getTaskProgress(task);
             return (
               <Link href={`/tasks/${task.id}`} key={task.id} className="block bg-td-card backdrop-blur-xl rounded-xl p-3 sm:p-4 border border-td-border hover:bg-td-hover-strong transition-all">
@@ -170,10 +170,12 @@ export default function ProjectDetail() {
                   <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '35', color: PRIORITY_COLORS[task.priority] }}>
                     {PRIORITY_LABELS[task.priority]}
                   </span>
-                  {assignee && (
-                    <div className="flex items-center gap-1">
-                      <Avatar name={assignee.name} color={assignee.avatarColor} avatarUrl={assignee.avatarUrl} size={16} />
-                      <span className="text-xs text-td-text-secondary">{assignee.name.split(' ')[0]}</span>
+                  {taskAssignees.length > 0 && (
+                    <div className="flex items-center -space-x-1">
+                      {taskAssignees.slice(0, 3).map((a) => (
+                        <Avatar key={a.id} name={a.name} color={a.avatarColor} avatarUrl={a.avatarUrl} size={16} />
+                      ))}
+                      {taskAssignees.length > 3 && <span className="text-[10px] text-td-text-muted ml-1.5">+{taskAssignees.length - 3}</span>}
                     </div>
                   )}
                   {task.dueDate && (

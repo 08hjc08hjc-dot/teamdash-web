@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { useTaskStore, useProjectStore, useTeamStore } from '../store';
 import { Avatar } from '../components/ui/Avatar';
 import { PRIORITY_COLORS } from '../theme';
 import { PRIORITY_LABELS } from '../constants';
-import { usePermissions } from '../hooks/usePermissions';
 import type { TaskStatus, Priority } from '../models';
 
 export default function NewTask() {
@@ -16,22 +15,22 @@ export default function NewTask() {
   const allProjects = useProjectStore((s) => s.projects);
   const projects = allProjects.filter((p) => p.status === 'active');
   const members = useTeamStore((s) => s.members);
-  const { canAssignOthers, email: myEmail } = usePermissions();
-
-  const myMember = members.find((m) => m.email === myEmail);
-  const assignableMembers = canAssignOthers ? members : members.filter((m) => m.email === myEmail);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<TaskStatus>('todo');
   const [priority, setPriority] = useState<Priority>('medium');
   const [projectId, setProjectId] = useState(projects[0]?.id ?? '');
-  const [assigneeId, setAssigneeId] = useState<string | null>(canAssignOthers ? null : (myMember?.id ?? null));
+  const [assigneeIds, setAssigneeIds] = useState<string[]>([]);
+
+  const toggleAssignee = (id: string) => {
+    setAssigneeIds((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !projectId) return;
-    addTask({ title: title.trim(), description: description.trim(), status, priority, projectId, assigneeId, dueDate: null });
+    addTask({ title: title.trim(), description: description.trim(), status, priority, projectId, assigneeIds, dueDate: null });
     router.push('/tasks');
   };
 
@@ -136,34 +135,22 @@ export default function NewTask() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-td-text-bright mb-2">담당자</label>
+          <label className="block text-sm font-medium text-td-text-bright mb-2">담당자 (복수 선택 가능)</label>
           <div className="flex gap-2 flex-wrap">
-            {canAssignOthers && (
-              <button
-                type="button"
-                onClick={() => setAssigneeId(null)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                  assigneeId === null
-                    ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
-                    : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
-                }`}
-              >
-                미배정
-              </button>
-            )}
-            {assignableMembers.map((m) => (
+            {members.map((m) => (
               <button
                 key={m.id}
                 type="button"
-                onClick={() => setAssigneeId(m.id)}
+                onClick={() => toggleAssignee(m.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
-                  assigneeId === m.id
+                  assigneeIds.includes(m.id)
                     ? 'bg-teal-500/20 text-teal-300 border border-teal-500/20'
                     : 'bg-td-card text-td-text-muted hover:bg-td-hover-strong hover:text-td-text-bright'
                 }`}
               >
                 <Avatar name={m.name} color={m.avatarColor} avatarUrl={m.avatarUrl} size={16} />
                 {m.name}
+                {assigneeIds.includes(m.id) && <Check size={12} />}
               </button>
             ))}
           </div>

@@ -126,10 +126,10 @@ export default function NewTask() {
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
             className="w-full px-4 py-2.5 border border-td-border rounded-xl text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 backdrop-blur"
-            style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+            style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}
           >
             {projects.map((p) => (
-              <option key={p.id} value={p.id} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{p.title}</option>
+              <option key={p.id} value={p.id} style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}>{p.title}</option>
             ))}
           </select>
         </div>

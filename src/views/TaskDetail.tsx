@@ -91,7 +91,7 @@ export default function TaskDetail() {
                   style={{ backgroundColor: PRIORITY_COLORS[task.priority] + '30', color: PRIORITY_COLORS[task.priority] }}
                 >
                   {(Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(([val, label]) => (
-                    <option key={val} value={val} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{label}</option>
+                    <option key={val} value={val} style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}>{label}</option>
                   ))}
                 </select>
               ) : (
@@ -156,10 +156,10 @@ export default function TaskDetail() {
                 value={task.projectId}
                 onChange={(e) => updateTask(task.id, { projectId: e.target.value })}
                 className="text-base font-medium border border-td-border rounded-lg px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-teal-500/50"
-                style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}
+                style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}
               >
                 {activeProjects.map((p) => (
-                  <option key={p.id} value={p.id} style={{ backgroundColor: '#1e293b', color: '#e2e8f0' }}>{p.title}</option>
+                  <option key={p.id} value={p.id} style={{ backgroundColor: 'var(--td-input)', color: 'var(--td-text)' }}>{p.title}</option>
                 ))}
               </select>
             ) : project ? (

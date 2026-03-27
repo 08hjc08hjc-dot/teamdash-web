@@ -83,7 +83,7 @@ export default function Settings() {
 
       {/* Profile */}
       <section className="mb-8">
-        <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-1">프로필</h3>
+        <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wide mb-1">프로필</h3>
         {authUser && (
           <div className="flex flex-wrap items-center gap-4 bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4 mt-3">
             <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
@@ -156,7 +156,7 @@ export default function Settings() {
       {/* Team Management - owner/admin only */}
       {(isOwner || isAdmin) && (
         <section className="mb-8">
-          <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">팀 관리</h3>
+          <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wide mb-3">팀 관리</h3>
 
           {/* Member list */}
           <div className="space-y-2">
@@ -171,7 +171,7 @@ export default function Settings() {
                     <p className="text-xs text-td-text-muted truncate">{m.email}</p>
                   </div>
                   {isMemberOwner ? (
-                    <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/30 text-teal-700 dark:bg-teal-500/15 dark:text-teal-400 font-medium">소유자</span>
+                    <span className="text-xs px-2.5 py-1 rounded-lg bg-teal-500/30 text-teal-700 dark:bg-teal-500/15 dark:text-teal-400 font-medium">Admin</span>
                   ) : (
                     <select
                       value={m.role}
@@ -205,7 +205,7 @@ export default function Settings() {
       {/* Data - owner only */}
       {isOwner && (
         <section className="mb-8">
-          <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">데이터</h3>
+          <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wide mb-3">데이터</h3>
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => setClearDialog(true)}
@@ -219,11 +219,11 @@ export default function Settings() {
 
       {/* About */}
       <section>
-        <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wide mb-3">정보</h3>
+        <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wide mb-3">정보</h3>
         <div className="bg-td-card backdrop-blur-xl border border-td-border rounded-2xl p-4">
           <div className="flex justify-between py-1">
             <span className="text-sm text-td-text-secondary">버전</span>
-            <span className="text-sm text-td-text font-medium">1.0.0</span>
+            <span className="text-sm text-td-text font-medium">1.1.0</span>
           </div>
           <div className="flex justify-between py-1">
             <span className="text-sm text-td-text-secondary">기술 스택</span>

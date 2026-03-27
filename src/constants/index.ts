@@ -12,7 +12,7 @@ export const PRIORITY_LABELS: Record<string, string> = {
 };
 
 export const ROLE_LABELS: Record<string, string> = {
-  owner: '소유자',
+  owner: 'Admin',
   admin: '관리자',
   member: '멤버',
 };

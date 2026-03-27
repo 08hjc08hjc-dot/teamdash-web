@@ -31,7 +31,7 @@ export default function ProjectDetail() {
   const [editing, setEditing] = useState(false);
   const [titleVal, setTitleVal] = useState('');
   const [descVal, setDescVal] = useState('');
-  const canDelete = isAdmin || isOwner;
+  const canDelete = true;
 
   if (!project) {
     return (

@@ -122,14 +122,12 @@ export default function TaskDetail() {
             >
               {editing ? <Check size={18} /> : <Pencil size={18} />}
             </button>
-            {isAdmin && (
-              <button
-                onClick={() => setDeleteDialog(true)}
-                className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-              >
-                <Trash2 size={18} />
-              </button>
-            )}
+            <button
+              onClick={() => setDeleteDialog(true)}
+              className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+            >
+              <Trash2 size={18} />
+            </button>
           </div>
         </div>
 
